@@ -5,20 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FASH VARIETIES STORE - Everything You Need, All In One Store</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-const SUPABASE_URL = '%%VITE_SUPABASE_URL%%'
-const SUPABASE_ANON_KEY = '%%VITE_SUPABASE_ANON_KEY%%'
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-</script>
   <style>
-.category-scroll::-webkit-scrollbar { display: none; }
-.cat-btn.active { background-color: #1e3a8a; color: white; }
-.color-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #e5e7eb; cursor: pointer; }
-.color-dot.selected { border-color: #1e3a8a; box-shadow: 0 0 0 2px #dbeafel
-.image-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; }
-.image-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); }
-.image-dot.active { background: white; }
+  .category-scroll::-webkit-scrollbar { display: none; }
+  .cat-btn.active { background-color: #1e3a8a; color: white; }
+  .color-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #e5e7eb; cursor: pointer; }
+  .color-dot.selected { border-color: #1e3a8a; box-shadow: 0 0 0 2px #dbeafe; }
+  .image-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; }
+  .image-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); }
+  .image-dot.active { background: white; }
   </style>
 </head>
 <body class="bg-gray-50">
@@ -42,20 +36,14 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
       
       <div class="category-scroll flex gap-2 overflow-x-auto pb-2">
         <button onclick="filterCategory('all')" class="cat-btn active bg-blue-900 text-white px-3 py-1 rounded-full text-sm whitespace-nowrap">All</button>
-        <button onclick="filterCategory('Kitchen Utensils')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Utensils</button>
-        <button onclick="filterCategory('Kitchen Items')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Items</button>
-        <button onclick="filterCategory('Kitchen Gadgets')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Gadgets</button>
         <button onclick="filterCategory('Kitchen Appliances')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Appliances</button>
         <button onclick="filterCategory('Home Gadgets')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Home Gadgets</button>
         <button onclick="filterCategory('Fashion Items')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Fashion Items</button>
-        <button onclick="filterCategory('Fashion Accessories')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Fashion Accessories</button>
-        <button onclick="filterCategory('Jewellery')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Jewellery</button>
         <button onclick="filterCategory('Beauty Item')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Beauty Items</button>
         <button onclick="filterCategory('Interior Decor')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Interior Decor</button>
         <button onclick="filterCategory('Lighting')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Lighting</button>
         <button onclick="filterCategory('Furniture')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Furniture</button>
         <button onclick="filterCategory('Phone Accessories')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Phone Accessories</button>
-        <button onclick="filterCategory('Power Bank')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Power Bank</button>
       </div>
     </div>
   </header>
@@ -79,7 +67,8 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
       <button onclick="checkout()" class="w-full bg-blue-900 text-white py-3 rounded-lg mt-4 font-semibold">Checkout</button>
     </div>
   </div>
-    <div id="order-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+
+  <div id="order-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
     <div class="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
       <h2 class="text-2xl font-bold mb-4 text-blue-900">Complete Your Order</h2>
       <form name="bank-order" method="POST" data-netlify="true" onsubmit="submitBankOrder(event)">
@@ -140,16 +129,6 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
           </a>
         </div>
 
-        <div class="space-y-2 mt-3">
-          <p class="text-sm font-semibold text-center">Or Call Us Directly:</p>
-          <a href="tel:0913256588" class="block text-center bg-blue-600 text-white py-2.5 rounded-lg font-semibold">
-            📞 Call: 0913 256 588
-          </a>
-          <a href="tel:08155707964" class="block text-center bg-blue-700 text-white py-2.5 rounded-lg font-semibold">
-            📞 Call: 0815 570 7964
-          </a>
-        </div>
-
         <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold mt-4">
           I Have Made / Will Make Payment
         </button>
@@ -157,52 +136,6 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
       </form>
     </div>
   </div>
-
-  <section class="bg-white py-12">
-    <div class="max-w-7xl mx-auto px-4">
-      <h2 class="text-3xl font-bold text-center text-blue-900 mb-8">Visit Our Stores</h2>
-      
-      <div class="grid md:grid-cols-2 gap-8">
-        <div class="shadow-lg rounded-lg overflow-hidden">
-          <iframe 
-  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.2!2d3.3206!3d6.6185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMzcnMDYuNiJOIDPCsDE5JzE0LjIiRQ!5e0!3m2!1sen!2sng!4v1234567890" 
-  width="100%" 
-  height="300" 
-  style="border:0;" 
-  allowfullscreen="" 
-  loading="lazy" 
-  referrerpolicy="no-referrer-when-downgrade">
-          </iframe>
-          <div class="p-4 bg-blue-50">
-            <h3 class="font-bold text-blue-900">Main Branch - Agege</h3>
-            <p class="text-sm mt-1">111, Agege Motor Road, beside Isokoko Police Station, Agege Lagos.</p>
-            <a href="https://maps.google.com/?q=Isokoko+Police+Station+Agege+Lagos" target="_blank" class="inline-block mt-2 text-sm bg-blue-900 text-white px-3 py-1 rounded">
-              Get Directions
-            </a>
-          </div>
-        </div>
-
-        <div class="shadow-lg rounded-lg overflow-hidden">
-          <iframe 
-  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.4!2d3.3092!3d6.6122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMzYnNDMuOSJOIDPCsDE4JzMzLjEiRQ!5e0!3m2!1sen!2sng!4v1234567890" 
-  width="100%" 
-  height="300" 
-  style="border:0;" 
-  allowfullscreen="" 
-  loading="lazy" 
-  referrerpolicy="no-referrer-when-downgrade">
-          </iframe>
-          <div class="p-4 bg-blue-50">
-            <h3 class="font-bold text-blue-900">Branch 2 - Dopemu</h3>
-            <p class="text-sm mt-1">23, Subola Street, Aluminium Village, Dopemu Agege</p>
-            <a href="https://maps.google.com/?q=Subola+Street+Aluminium+Village+Dopemu" target="_blank" class="inline-block mt-2 text-sm bg-blue-900 text-white px-3 py-1 rounded">
-              Get Directions
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <footer class="bg-blue-900 text-white mt-12 py-8">
     <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
@@ -218,14 +151,8 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
       </div>
       <div>
         <h3 class="font-bold text-lg mb-3">Contact Us</h3>
-        <p class="text-sm">Phone: 
-          <a href="tel:08155707964" class="underline">08155707964</a>, 
-          <a href="tel:0913256588" class="underline">0913256588</a>
-        </p>
-        <p class="text-sm">WhatsApp: 
-          <a href="https://wa.me/2348064414142" class="underline">08064414142</a>, 
-          <a href="https://wa.me/2349060954176" class="underline">09060954176</a>
-        </p>
+        <p class="text-sm">Phone: <a href="tel:08155707964" class="underline">08155707964</a>, <a href="tel:0913256588" class="underline">0913256588</a></p>
+        <p class="text-sm">WhatsApp: <a href="https://wa.me/2348064414142" class="underline">08064414142</a>, <a href="https://wa.me/2349060954176" class="underline">09060954176</a></p>
         <p class="text-sm">Email: deeflexconsult@gmail.com</p>
       </div>
       <div>
@@ -239,28 +166,16 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     </div>
   </footer>
 
-  <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-    <a href="tel:08155707964" class="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-      </svg>
-    </a>
-    <a href="https://wa.me/2348064414142" target="_blank" class="bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0.16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-      </svg>
-    </a>
-  </div>
   <script>
-  // 1. CONFIG - REPLACE WITH YOUR SUPABASE DETAILS
-  const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co'
-  const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY'
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  // FASH STORE - Google Sheets Version
+  const SHEET_ID = '1Tc7pQ-MeK67_MLJ3JAyE-QCnLpdesAH7-sFCxv34z9M';
+  const SHEET_NAME = 'Sheet1';
 
   let products = []
   let cart = JSON.parse(localStorage.getItem('fash-cart') || '[]')
   let currentCategory = 'all'
-  let selectedColors = {} // Store selected color per product
+  let selectedColors = {}
+  let imageIndex = {}
 
   function generateOrderId() {
     const date = new Date()
@@ -277,7 +192,6 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     return tier? product.price * (1 - tier.percent / 100) : product.price
   }
 
-  // Color mapping for common colors
   const colorMap = {
     'Red': '#ef4444', 'Blue': '#3b82f6', 'Green': '#22c55e', 'Black': '#000000',
     'White': '#ffffff', 'Yellow': '#eab308', 'Pink': '#ec4899', 'Purple': '#a855f7',
@@ -293,7 +207,6 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     })
   }
 
-  let imageIndex = {} // Track current image per product
   function showImage(productId, index) {
     imageIndex[productId] = index
     const img = document.getElementById(`img-${productId}`)
@@ -308,17 +221,44 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   }
 
   async function loadProducts() {
-    const { data, error } = await supabase.from('products').select('*').gt('stock', 0).order('created_at', { ascending: false })
-    if (error) {
-      console.error(error)
-      return
+    try {
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+      const res = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.substring(47).slice(0, -2));
+      
+      products = json.table.rows.map((row, index) => {
+        const c = row.c;
+        return {
+          id: index + 1,
+          name: c[0]?.v || '',
+          size: c[1]?.v || '',
+          capacity_number: c[2]?.v || '',
+          capacity_unit: c[3]?.v || '',
+          price: Number(c[4]?.v) || 0,
+          stock: Number(c[5]?.v) || 0,
+          colors: c[6]?.v? c[6].v.split(',').map(s => s.trim()) : [],
+          images: [c[7]?.v, c[8]?.v, c[9]?.v].filter(Boolean),
+          image_url: c[7]?.v || '',
+          category: c[12]?.v || 'all',
+          volume_discounts: [
+            c[10]?.v? {min_qty: 5, percent: Math.round((1 - c[10].v/c[4]?.v) * 100)} : null,
+            c[11]?.v? {min_qty: 10, percent: Math.round((1 - c[11].v/c[4]?.v) * 100)} : null
+          ].filter(Boolean)
+        };
+      }).filter(p => p.name && p.stock > 0);
+      
+      products.forEach(p => {
+        imageIndex[p.id] = 0
+        if (p.colors && p.colors.length > 0) selectedColors[p.id] = p.colors[0]
+      })
+      
+      console.log('Products loaded from Sheet:', products);
+      renderProducts()
+    } catch (err) {
+      console.error('Sheet error:', err);
+      document.getElementById('products').innerHTML = '<p class="text-center text-red-500">Could not load products. Make sure Sheet is public: Share → Anyone with the link → Viewer</p>'
     }
-    products = data || []
-    products.forEach(p => {
-      imageIndex[p.id] = 0
-      if (p.colors && p.colors.length > 0) selectedColors[p.id] = p.colors[0]
-    })
-    renderProducts()
   }
 
   function filterCategory(cat) {
@@ -416,7 +356,7 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
       existing.qty += qty
     } else {
       cart.push({
-       ...product, 
+     ...product, 
         qty, 
         selectedColor,
         cartItemId
@@ -530,54 +470,24 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     
     const formData = new FormData(e.target)
     
-    // AUTOMATIC STOCK REDUCTION - Check and reduce stock for each item
-    for (const item of cart) {
-      const { data: currentProduct, error: fetchError } = await supabase
-       .from('products')
-       .select('stock')
-       .eq('id', item.id)
-       .single()
-      
-      if (fetchError ||!currentProduct) {
-        alert(`Error checking stock for ${item.name}`)
-        return
-      }
-      
-      if (currentProduct.stock < item.qty) {
-        alert(`Sorry, ${item.name} only has ${currentProduct.stock} left in stock. Please update your cart.`)
-        return
-      }
-      
-      // Reduce stock
-      const { error: updateError } = await supabase
-       .from('products')
-       .update({ stock: currentProduct.stock - item.qty })
-       .eq('id', item.id)
-      
-      if (updateError) {
-        alert(`Error updating stock for ${item.name}. Order not placed.`)
-        return
-      }
-    }
-    
-    // Save order after stock is successfully reduced
-    await supabase.from('orders').insert({
+    // Stock won't auto-update with Google Sheets. Update 'Quantity' column manually after each order.
+    console.log('Order received. Remember to reduce stock in Google Sheet manually.');
+    console.log('Order data:', {
       order_id: currentOrderId,
       customer_name: formData.get('customer_name'),
       customer_phone: formData.get('customer_phone'),
       customer_email: formData.get('customer_email'),
       address: formData.get('address'),
       items: cart,
-      total_amount: total,
-      status: 'pending_payment'
+      total_amount: total
     })
     
     setTimeout(() => {
       cart = []
       saveCart()
       closeOrderModal()
-      loadProducts() // Reload products to show updated stock
-      alert(`Order ${currentOrderId} received! Stock updated. Use this ID as payment reference. We'll contact you after payment confirmation.`)
+      loadProducts()
+      alert(`Order ${currentOrderId} received! Stock won't auto-update. Update your Google Sheet manually.`)
     }, 1000)
   }
 
