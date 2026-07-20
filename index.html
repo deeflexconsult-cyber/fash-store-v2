@@ -5,17 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FASH VARIETIES STORE - Everything You Need, All In One Store</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-.category-scroll::-webkit-scrollbar { display: none; }
-.cat-btn.active { background-color: #1e3a8a; color: white; }
-.color-swatch { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border: 2px solid #e5e7eb; border-radius: 6px; cursor: pointer; font-size: 12px; }
-.color-swatch.selected { border-color: #1e3a8a; background: #eff6ff; }
-.color-swatch.disabled { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
-.color-dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid #ccc; }
-.image-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; }
-.image-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; }
-.image-dot.active { background: white; }
+  .category-scroll::-webkit-scrollbar { display: none; }
+  .cat-btn.active { background-color: #1e3a8a; color: white; }
+  .color-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #e5e7eb; cursor: pointer; }
+  .color-dot.selected { border-color: #1e3a8a; box-shadow: 0 0 0 2px #dbeafe; }
+  .image-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; }
+  .image-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); }
+  .image-dot.active { background: white; }
   </style>
 </head>
 <body class="bg-gray-50">
@@ -30,30 +27,23 @@
           <p class="text-xs text-gray-600">TRANSPARENCY • QUALITY • RELIABILITY</p>
         </div>
         <button id="cart-btn" class="bg-blue-900 text-white px-4 py-2 rounded-lg flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 0 000-4zm-8 2a2 2 0 11-4 0 2 0 014 0z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
           Cart (<span id="cart-count">0</span>)
         </button>
       </div>
       
-      <input id="search" placeholder="Search for products..." class="w-full border-gray-300 rounded-lg px-4 py-2 mb-3">
+      <input id="search" placeholder="Search for products..." class="w-full border border-gray-300 rounded-lg px-4 py-2 mb-3">
       
       <div class="category-scroll flex gap-2 overflow-x-auto pb-2">
         <button onclick="filterCategory('all')" class="cat-btn active bg-blue-900 text-white px-3 py-1 rounded-full text-sm whitespace-nowrap">All</button>
-        <button onclick="filterCategory('Kitchen Utensils')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Utensils</button>
-        <button onclick="filterCategory('Kitchen Items')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Items</button>
-        <button onclick="filterCategory('Kitchen Gadgets')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Gadgets</button>
-        <button onclick="filterCategory('Home Appliance')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Home Appliance</button>
+        <button onclick="filterCategory('Kitchen Appliances')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Appliances</button>
         <button onclick="filterCategory('Home Gadgets')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Home Gadgets</button>
         <button onclick="filterCategory('Fashion Items')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Fashion Items</button>
-        <button onclick="filterCategory('Fashion Accessories')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Fashion Accessories</button>
-        <button onclick="filterCategory('Jewellery')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Jewellery</button>
-        <button onclick="filterCategory('Beauty Item')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Beauty Item</button>
+        <button onclick="filterCategory('Beauty Item')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Beauty Items</button>
         <button onclick="filterCategory('Interior Decor')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Interior Decor</button>
         <button onclick="filterCategory('Lighting')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Lighting</button>
-        <button onclick="filterCategory('Furnitures')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Furnitures</button>
+        <button onclick="filterCategory('Furniture')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Furniture</button>
         <button onclick="filterCategory('Phone Accessories')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Phone Accessories</button>
-        <button onclick="filterCategory('Power Bank')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Power Bank</button>
-        <button onclick="filterCategory('Health')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Health</button>
       </div>
     </div>
   </header>
@@ -69,29 +59,23 @@
       <button onclick="toggleCart()" class="text-2xl">&times;</button>
     </div>
     <div id="cart-items"></div>
-    <div class="border-t mt-6 pt-4 space-y-1 text-sm">
-      <div class="flex justify-between">
-        <span>Subtotal:</span>
-        <span id="cart-subtotal">₦0</span>
-      </div>
-      <div class="flex justify-between">
-        <span>VAT (7.5%):</span>
-        <span id="cart-vat">₦0</span>
-      </div>
-      <div class="flex justify-between text-xl font-bold pt-2 border-t">
+    <div class="border-t mt-6 pt-4">
+      <div class="flex justify-between text-xl font-bold">
         <span>Total:</span>
         <span id="cart-total">₦0</span>
       </div>
-      <p class="text-xs text-gray-500">+ Shipping calculated at checkout</p>
       <button onclick="checkout()" class="w-full bg-blue-900 text-white py-3 rounded-lg mt-4 font-semibold">Checkout</button>
     </div>
   </div>
 
-  <!-- ORDER + PAYMENT MODAL -->
   <div id="order-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-lg max-w-md w-full p-6 max-h-screen overflow-y-auto">
+    <div class="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
       <h2 class="text-2xl font-bold mb-4 text-blue-900">Complete Your Order</h2>
-      <form id="order-form" onsubmit="submitOrder(event)">
+      <form name="bank-order" method="POST" data-netlify="true" onsubmit="submitBankOrder(event)">
+        <input type="hidden" name="form-name" value="bank-order" />
+        <input type="hidden" name="order_id" id="order-id-input">
+        <input type="hidden" name="order_details" id="order-details-input">
+        <input type="hidden" name="order_total" id="order-total-input">
         
         <label class="block mb-3">
           <span class="text-sm font-semibold">Full Name *</span>
@@ -108,77 +92,45 @@
           <input required type="email" name="customer_email" class="w-full border rounded px-3 py-2 mt-1">
         </label>
         
-        <div class="block mb-4">
-          <span class="text-sm font-semibold">Delivery Method *</span>
-          <div class="mt-2 space-y-2">
-            <label class="flex items-start gap-2 border rounded px-3 py-2 cursor-pointer hover:bg-gray-50">
-              <input type="radio" name="delivery_type" value="Pickup" required onchange="updateShippingCost()" class="mt-1">
-              <div>
-                <span class="font-semibold">Pickup at Store - FREE</span>
-                <p class="text-xs text-gray-600">Collect at Agege or Dopemu</p>
-              </div>
-            </label>
-            <label class="flex items-start gap-2 border rounded px-3 py-2 cursor-pointer hover:bg-gray-50">
-              <input type="radio" name="delivery_type" value="Waybill" required onchange="updateShippingCost()" class="mt-1">
-              <div>
-                <span class="font-semibold">Waybill Delivery</span>
-                <p class="text-xs text-gray-600">Lagos ₦3,000 | Others ₦5,000</p>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <div id="shipping-details" class="hidden mb-4">
-          <label class="block mb-3">
-            <span class="text-sm font-semibold">Full Delivery Address *</span>
-            <textarea name="address" class="w-full border rounded px-3 py-2 mt-1" rows="3" placeholder="Street, Area, City, State, Nearest Landmark"></textarea>
-          </label>
-        </div>
-
         <label class="block mb-4">
-          <span class="text-sm font-semibold">Order Notes - Optional</span>
-          <textarea name="order_notes" class="w-full border rounded px-3 py-2 mt-1" rows="2" placeholder="Any special instructions? e.g. Call before delivery"></textarea>
+          <span class="text-sm font-semibold">Delivery Address *</span>
+          <textarea required name="address" class="w-full border rounded px-3 py-2 mt-1" rows="2" placeholder="Street, City, State"></textarea>
         </label>
 
-        <!-- ORDER SUMMARY WITH VAT -->
         <div class="bg-blue-50 p-4 rounded mb-4 text-sm border border-blue-200">
-          <p class="font-bold mb-2 text-blue-900">Order Summary:</p>
-          <p><b>Order ID:</b> <span id="order-id-display" class="font-bold font-mono text-blue-900"></span></p>
-          <div class="space-y-1 mt-2">
-            <div class="flex justify-between"><span>Subtotal:</span><span id="modal-subtotal"></span></div>
-            <div class="flex justify-between"><span>VAT 7.5%:</span><span id="modal-vat"></span></div>
-            <div class="flex justify-between"><span>Shipping:</span><span id="modal-shipping">₦0</span></div>
-            <div class="flex justify-between font-bold text-lg pt-1 border-t"><span>Total to Pay:</span><span id="modal-total"></span></div>
+          <p class="font-bold mb-2 text-blue-900">Pay via Bank Transfer:</p>
+          
+          <div class="mb-3">
+            <p class="font-semibold">Option 1: Access Bank</p>
+            <p><b>Account Number:</b> 1920452449</p>
+            <p><b>Account Name:</b> FASH VARIETIES STORE</p>
+          </div>
+          
+          <div class="mb-3">
+            <p class="font-semibold">Option 2: Moniepoint</p>
+            <p><b>Account Number:</b> 5271600556</p>
+            <p><b>Account Name:</b> FASH VARIETIES STORE</p>
+          </div>
+
+          <div class="mt-3 pt-3 border-t border-blue-300">
+            <p><b>Order ID:</b> <span id="order-id-display" class="font-bold font-mono text-blue-900"></span></p>
+            <p><b>Amount to Pay:</b> <span id="modal-total" class="font-bold text-lg"></span></p>
+            <p class="mt-2 text-xs">Use your Order ID as payment reference. We deliver nationwide. No Refund No Exchange.</p>
           </div>
         </div>
 
-        <!-- BANK DETAILS - BOTH ACCOUNTS SHOWN -->
-        <div class="bg-green-50 p-4 rounded mb-4 text-sm border border-green-200">
-          <p class="font-bold mb-2 text-green-900">STEP 1: Make Payment to ANY Account Below</p>
-          <div class="space-y-3">
-            <div class="bg-white p-2 rounded border">
-              <p class="font-semibold">Option 1: Access Bank</p>
-              <p><b>Account Number:</b> 1920452449</p>
-              <p><b>Account Name:</b> FASH VARIETIES STORE</p>
-            </div>
-            <div class="bg-white p-2 rounded border">
-              <p class="font-semibold">Option 2: Moniepoint</p>
-              <p><b>Account Number:</b> 5271600556</p>
-              <p><b>Account Name:</b> FASH VARIETIES STORE</p>
-            </div>
-          </div>
-          <p class="mt-2 text-xs font-semibold">Transfer the exact total above. Use your Order ID as reference.</p>
+        <div class="space-y-2 mb-3">
+          <p class="text-sm font-semibold text-center">Notify Us on WhatsApp After Payment:</p>
+          <a id="whatsapp-link-1" target="_blank" class="block text-center bg-green-500 text-white py-2.5 rounded-lg font-semibold">
+            WhatsApp: 0806 441 4142
+          </a>
+          <a id="whatsapp-link-2" target="_blank" class="block text-center bg-green-600 text-white py-2.5 rounded-lg font-semibold">
+            WhatsApp: 0906 095 4176
+          </a>
         </div>
 
-        <!-- RECEIPT UPLOAD - STEP 2 -->
-        <div class="bg-yellow-50 p-4 rounded mb-4 text-sm border border-yellow-200">
-          <p class="font-bold mb-2 text-yellow-900">STEP 2: Upload Payment Receipt *</p>
-          <input required type="file" id="receipt-file" accept="image/*,.pdf" class="w-full text-xs">
-          <p class="text-xs mt-1 text-gray-600">Screenshot or PDF of transfer. Max 5MB.</p>
-        </div>
-
-        <button type="submit" id="submit-btn" class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold mt-4">
-          Submit Order + Receipt
+        <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold mt-4">
+          I Have Made / Will Make Payment
         </button>
         <button type="button" onclick="closeOrderModal()" class="w-full mt-2 text-gray-600">Cancel</button>
       </form>
@@ -200,7 +152,7 @@
       <div>
         <h3 class="font-bold text-lg mb-3">Contact Us</h3>
         <p class="text-sm">Phone: <a href="tel:08155707964" class="underline">08155707964</a>, <a href="tel:0913256588" class="underline">0913256588</a></p>
-        <p class="text-sm">WhatsApp: <a href="https://wa.me/2348064414142" class="underline">08064414142</a></p>
+        <p class="text-sm">WhatsApp: <a href="https://wa.me/2348064414142" class="underline">08064414142</a>, <a href="https://wa.me/2349060954176" class="underline">09060954176</a></p>
         <p class="text-sm">Email: deeflexconsult@gmail.com</p>
       </div>
       <div>
@@ -209,41 +161,27 @@
         <p class="text-sm mt-2">23, Subola Street, Aluminium Village, Dopemu Agege</p>
       </div>
     </div>
-    <div class="text-center text-xs mt-8 text-blue-200 space-y-1">
-      <p>© 2026 FASH VARIETIES STORE. All rights reserved.</p>
-      <p>Design by <a href="mailto:kampcompany01@gmail.com" class="underline hover:text-white">kampcompany01@gmail.com</a></p>
+    <div class="text-center text-xs mt-8 text-blue-200">
+      © 2026 FASH VARIETIES STORE. All rights reserved.
     </div>
   </footer>
 
-  <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
-    <a href="https://wa.me/2348064414142" target="_blank" title="WhatsApp" class="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg flex items-center justify-center">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 0 0 0 7.994 0C3.627 0.068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326z"/></svg>
-    </a>
-    <a href="tel:+2348155707964" title="Call" class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg flex items-center justify-center">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0.178.643l2.457 2.457a.678.678 0 0 0.644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/></svg>
-    </a>
-  </div>
-
   <script>
-  // REPLACE THESE 2 LINES
-  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-  const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
-  
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  const VAT_RATE = 0.075;
+  // FASH STORE - Google Sheets Version
+  const SHEET_ID = '1Tc7pQ-MeK67_MLJ3JAyE-QCnLpdesAH7-sFCxv34z9M';
+  const SHEET_NAME = 'Sheet1';
 
   let products = []
   let cart = JSON.parse(localStorage.getItem('fash-cart') || '[]')
   let currentCategory = 'all'
   let selectedColors = {}
   let imageIndex = {}
-  let currentOrderId = ''
 
   function generateOrderId() {
     const date = new Date()
-    const id = 'FVS-' + date.getFullYear().toString().slice(-2) +
-               (date.getMonth()+1).toString().padStart(2,'0') +
-               date.getDate().toString().padStart(2,'0') + '-' +
+    const id = 'FVS-' + date.getFullYear().toString().slice(-2) + 
+               (date.getMonth()+1).toString().padStart(2,'0') + 
+               date.getDate().toString().padStart(2,'0') + '-' + 
                Math.random().toString(36).substr(2, 5).toUpperCase()
     return id
   }
@@ -254,36 +192,6 @@
     return tier? product.price * (1 - tier.percent / 100) : product.price
   }
 
-  function calculateCartTotals() {
-    const subtotal = cart.reduce((sum, item) => sum + calcUnitPrice(item, item.qty) * item.qty, 0)
-    const vat = Math.round(subtotal * VAT_RATE)
-    const total = subtotal + vat
-    return { subtotal, vat, total }
-  }
-
-  function getShippingCost() {
-    const deliveryType = document.querySelector('input[name="delivery_type"]:checked')?.value;
-    if (deliveryType === 'Pickup') return 0;
-    if (deliveryType === 'Waybill') {
-      const address = document.querySelector('textarea[name="address"]')?.value.toLowerCase() || '';
-      if (address.includes('lagos')) return 3000;
-      return 5000;
-    }
-    return 0;
-  }
-
-  function updateShippingCost() {
-    const shipping = getShippingCost();
-    document.getElementById('modal-shipping').textContent = `₦${shipping.toLocaleString()}`;
-    const { subtotal, vat } = calculateCartTotals();
-    const total = subtotal + vat + shipping;
-    document.getElementById('modal-total').textContent = `₦${total.toLocaleString()}`;
-    
-    const deliveryType = document.querySelector('input[name="delivery_type"]:checked')?.value;
-    document.getElementById('shipping-details').classList.toggle('hidden', deliveryType!== 'Waybill');
-    document.querySelector('textarea[name="address"]').required = deliveryType === 'Waybill';
-  }
-
   const colorMap = {
     'Red': '#ef4444', 'Blue': '#3b82f6', 'Green': '#22c55e', 'Black': '#000000',
     'White': '#ffffff', 'Yellow': '#eab308', 'Pink': '#ec4899', 'Purple': '#a855f7',
@@ -291,16 +199,12 @@
     'Gold': '#fbbf24', 'Silver': '#d1d5db', 'Navy': '#1e3a8a', 'Maroon': '#7f1d1d'
   }
 
-  function selectColor(productId, color, stock) {
-    if (stock <= 0) return;
-    selectedColors[productId] = color;
-    document.querySelectorAll(`#product-${productId}.color-swatch`).forEach(swatch => {
-      swatch.classList.remove('selected');
-      if (swatch.dataset.color === color) swatch.classList.add('selected');
-    });
-    const qtyInput = document.getElementById(`qty-${productId}`);
-    qtyInput.max = stock;
-    if (parseInt(qtyInput.value) > stock) qtyInput.value = stock;
+  function selectColor(productId, color) {
+    selectedColors[productId] = color
+    document.querySelectorAll(`#product-${productId}.color-dot`).forEach(dot => {
+      dot.classList.remove('selected')
+      if (dot.dataset.color === color) dot.classList.add('selected')
+    })
   }
 
   function showImage(productId, index) {
@@ -318,69 +222,84 @@
 
   async function loadProducts() {
     try {
-      const { data, error } = await supabase.from('products').select('*').gt('stock', 0);
-      if (error) throw error;
-
-      products = data.map(p => ({
-...p,
-        color_variants: p.color_variants || [],
-        images: [p.image1, p.image2, p.image3].filter(Boolean),
-        volume_discounts: []
-      }));
-
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+      const res = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.substring(47).slice(0, -2));
+      
+      products = json.table.rows.map((row, index) => {
+        const c = row.c;
+        return {
+          id: index + 1,
+          name: c[0]?.v || '',
+          size: c[1]?.v || '',
+          capacity_number: c[2]?.v || '',
+          capacity_unit: c[3]?.v || '',
+          price: Number(c[4]?.v) || 0,
+          stock: Number(c[5]?.v) || 0,
+          colors: c[6]?.v? c[6].v.split(',').map(s => s.trim()) : [],
+          images: [c[7]?.v, c[8]?.v, c[9]?.v].filter(Boolean),
+          image_url: c[7]?.v || '',
+          category: c[12]?.v || 'all',
+          volume_discounts: [
+            c[10]?.v? {min_qty: 5, percent: Math.round((1 - c[10].v/c[4]?.v) * 100)} : null,
+            c[11]?.v? {min_qty: 10, percent: Math.round((1 - c[11].v/c[4]?.v) * 100)} : null
+          ].filter(Boolean)
+        };
+      }).filter(p => p.name && p.stock > 0);
+      
       products.forEach(p => {
-        imageIndex[p.id] = 0;
-        const firstAvailable = p.color_variants?.find(v => v.stock > 0);
-        if (firstAvailable) selectedColors[p.id] = firstAvailable.color;
-      });
-
-      renderProducts();
+        imageIndex[p.id] = 0
+        if (p.colors && p.colors.length > 0) selectedColors[p.id] = p.colors[0]
+      })
+      
+      console.log('Products loaded from Sheet:', products);
+      renderProducts()
     } catch (err) {
-      console.error('Supabase error:', err);
-      document.getElementById('products').innerHTML = '<p class="text-center text-red-500">Could not load products. Check Supabase URL/Key.</p>';
+      console.error('Sheet error:', err);
+      document.getElementById('products').innerHTML = '<p class="text-center text-red-500">Could not load products. Make sure Sheet is public: Share → Anyone with the link → Viewer</p>'
     }
   }
 
   function filterCategory(cat) {
-    currentCategory = cat;
+    currentCategory = cat
     document.querySelectorAll('.cat-btn').forEach(btn => {
-      btn.classList.remove('active', 'bg-blue-900', 'text-white');
-      btn.classList.add('bg-gray-200');
-    });
-    event.target.classList.add('active', 'bg-blue-900', 'text-white');
-    event.target.classList.remove('bg-gray-200');
-    renderProducts();
+      btn.classList.remove('active', 'bg-blue-900', 'text-white')
+      btn.classList.add('bg-gray-200')
+    })
+    event.target.classList.add('active', 'bg-blue-900', 'text-white')
+    event.target.classList.remove('bg-gray-200')
+    renderProducts()
   }
 
-  document.getElementById('search').addEventListener('input', (e) => renderProducts(e.target.value));
+  document.getElementById('search').addEventListener('input', (e) => renderProducts(e.target.value))
 
   function renderProducts(searchTerm = '') {
-    const grid = document.getElementById('products');
-    const noProducts = document.getElementById('no-products');
-    let filtered = products;
-
+    const grid = document.getElementById('products')
+    const noProducts = document.getElementById('no-products')
+    let filtered = products
+    
     if (currentCategory!== 'all') {
-      filtered = filtered.filter(p => p.category === currentCategory);
+      filtered = filtered.filter(p => p.category === currentCategory)
     }
     if (searchTerm) {
-      filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
     }
-
+    
     if (filtered.length === 0) {
-      grid.innerHTML = '';
-      noProducts.classList.remove('hidden');
-      return;
+      grid.innerHTML = ''
+      noProducts.classList.remove('hidden')
+      return
     }
-    noProducts.classList.add('hidden');
-
+    noProducts.classList.add('hidden')
+    
     grid.innerHTML = filtered.map(p => {
-      const nextTier = p.volume_discounts?.sort((a,b) => a.min_qty - b.min_qty)[0];
-      const images = p.images && p.images.length > 0? p.images : ['https://placehold.co/300x300?text=No+Image'];
-      const capacityText = p.capacity_number && p.capacity_unit? `${p.capacity_number}${p.capacity_unit}` : '';
-      const sizeText = p.size? `Size: ${p.size}` : '';
-      const detailsText = [sizeText, capacityText].filter(Boolean).join(' • ');
-      const totalStock = p.color_variants?.reduce((sum, v) => sum + v.stock, 0) || p.stock;
-
+      const nextTier = p.volume_discounts?.sort((a,b) => a.min_qty - b.min_qty)[0]
+      const images = p.images && p.images.length > 0? p.images : [p.image_url || 'https://placehold.co/300x300?text=No+Image']
+      const capacityText = p.capacity_number && p.capacity_unit? `${p.capacity_number}${p.capacity_unit}` : ''
+      const sizeText = p.size? `Size: ${p.size}` : ''
+      const detailsText = [sizeText, capacityText].filter(Boolean).join(' • ')
+      
       return `
         <div id="product-${p.id}" class="bg-white rounded-lg shadow hover:shadow-lg transition p-3">
           <div class="relative">
@@ -395,536 +314,186 @@
           ${detailsText? `<p class="text-xs text-gray-600 mb-1">${detailsText}</p>` : ''}
           <p class="text-blue-900 text-xl font-bold">₦${p.price.toLocaleString()}</p>
           ${nextTier? `<p class="text-green-600 text-xs">Buy ${nextTier.min_qty}+ for ${nextTier.percent}% off</p>` : '<p class="text-xs h-4"></p>'}
-          ${p.color_variants && p.color_variants.length > 0? `
-            <div class="flex flex-wrap gap-1 my-2">
-              ${p.color_variants.map((v, i) => `
-                <div class="color-swatch ${i === 0 && v.stock > 0? 'selected' : ''} ${v.stock <= 0? 'disabled' : ''}" 
-                     data-color="${v.color}"
-                     onclick="selectColor(${p.id}, '${v.color}', ${v.stock})">
-                  <div class="color-dot" style="background-color: ${colorMap[v.color] || '#9ca3af'}"></div>
-                  <span>${v.color}: ${v.stock}</span>
-                </div>
+          ${p.colors && p.colors.length > 0? `
+            <div class="flex gap-1 my-2">
+              ${p.colors.map((color, i) => `
+                <div class="color-dot ${i === 0? 'selected' : ''}" 
+                     style="background-color: ${colorMap[color] || '#9ca3af'}" 
+                     data-color="${color}"
+                     onclick="selectColor(${p.id}, '${color}')"
+                     title="${color}"></div>
               `).join('')}
             </div>
           ` : ''}
           <div class="flex items-center gap-2 mt-2">
-            <input type="number" min="1" max="${totalStock}" value="1" id="qty-${p.id}" class="w-14 border rounded px-2 py-1 text-sm">
+            <input type="number" min="1" max="${p.stock}" value="1" id="qty-${p.id}" class="w-14 border rounded px-2 py-1 text-sm">
             <button onclick="addToCart(${p.id})" class="flex-1 bg-blue-900 text-white py-1.5 rounded text-sm hover:bg-blue-800">Add</button>
           </div>
-          <p class="text-xs text-gray-500 mt-1">Total Stock: ${totalStock}</p>
+          <p class="text-xs text-gray-500 mt-1">Stock: ${p.stock}</p>
         </div>
       `
-    }).join('');
+    }).join('')
   }
 
   function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
-    const qty = parseInt(document.getElementById(`qty-${productId}`).value) || 1;
-    const selectedColor = selectedColors[productId];
+    const product = products.find(p => p.id === productId)
+    const qty = parseInt(document.getElementById(`qty-${productId}`).value) || 1
+    const selectedColor = selectedColors[productId] || (product.colors? product.colors[0] : null)
     
-    if (!selectedColor && product.color_variants?.length > 0) {
-      alert('Please select a color');
-      return;
+    if (qty > product.stock) {
+      alert(`Only ${product.stock} left in stock`)
+      return
     }
-
-    const colorVariant = product.color_variants?.find(v => v.color === selectedColor);
-    const availableStock = colorVariant? colorVariant.stock : product.stock;
-
-    if (qty > availableStock) {
-      alert(`Only ${availableStock} left in ${selectedColor}`);
-      return;
-    }
-
-    const cartItemId = `${productId}-${selectedColor || 'default'}`;
-    const existing = cart.find(item => item.cartItemId === cartItemId);
-
+    
+    const cartItemId = `${productId}-${selectedColor || 'default'}`
+    const existing = cart.find(item => item.cartItemId === cartItemId)
+    
     if (existing) {
-      if (existing.qty + qty > availableStock) {
-        alert(`Cannot add more. Only ${availableStock} total in ${selectedColor}`);
-        return;
+      if (existing.qty + qty > product.stock) {
+        alert(`Cannot add more. Only ${product.stock} total in stock`)
+        return
       }
-      existing.qty += qty;
+      existing.qty += qty
     } else {
-      cart.push({...product, qty, selectedColor, cartItemId, colorStock: availableStock });
+      cart.push({
+     ...product, 
+        qty, 
+        selectedColor,
+        cartItemId
+      })
     }
-    saveCart();
+    saveCart()
   }
 
   function updateCartQty(cartItemId, qty) {
-    const item = cart.find(i => i.cartItemId === cartItemId);
-    if (!item) return;
+    const item = cart.find(i => i.cartItemId === cartItemId)
+    if (!item) return
+    
     if (qty <= 0) {
-      cart = cart.filter(i => i.cartItemId!== cartItemId);
+      cart = cart.filter(i => i.cartItemId!== cartItemId)
     } else {
-      if (qty > item.colorStock) {
-        alert(`Only ${item.colorStock} in ${item.selectedColor}`);
-        return;
+      if (qty > item.stock) {
+        alert(`Only ${item.stock} in stock`)
+        return
       }
-      item.qty = qty;
+      item.qty = qty
     }
-    saveCart();
+    saveCart()
   }
 
   function saveCart() {
-    localStorage.setItem('fash-cart', JSON.stringify(cart));
-    renderCart();
+    localStorage.setItem('fash-cart', JSON.stringify(cart))
+    renderCart()
   }
 
   function renderCart() {
-    document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.qty, 0);
-    const cartItems = document.getElementById('cart-items');
-
-    if (cart.length === 0) {
-      cartItems.innerHTML = '<p class="<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FASH VARIETIES STORE - Everything You Need, All In One Store</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-.category-scroll::-webkit-scrollbar { display: none; }
-.cat-btn.active { background-color: #1e3a8a; color: white; }
-.color-swatch { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border: 2px solid #e5e7eb; border-radius: 6px; cursor: pointer; font-size: 12px; }
-.color-swatch.selected { border-color: #1e3a8a; background: #eff6ff; }
-.color-swatch.disabled { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
-.color-dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid #ccc; }
-.image-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; }
-.image-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; }
-.image-dot.active { background: white; }
-  </style>
-</head>
-<body class="bg-gray-50">
-  <div class="w-full">
-    <img src="header.jpg" alt="FASH VARIETIES STORE" style="width:100%; max-width:1200px; height:auto; display:block; margin:0 auto;">
-  </div>
-  <header class="bg-white shadow sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 py-4">
-      <div class="flex justify-between items-center mb-4">
-        <div>
-          <h1 class="text-2xl font-bold text-blue-900">FASH VARIETIES</h1>
-          <p class="text-xs text-gray-600">TRANSPARENCY • QUALITY • RELIABILITY</p>
-        </div>
-        <button id="cart-btn" class="bg-blue-900 text-white px-4 py-2 rounded-lg flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 0 000-4zm-8 2a2 2 0 11-4 0 2 0 014 0z" /></svg>
-          Cart (<span id="cart-count">0</span>)
-        </button>
-      </div>
-      
-      <input id="search" placeholder="Search for products..." class="w-full border-gray-300 rounded-lg px-4 py-2 mb-3">
-      
-      <div class="category-scroll flex gap-2 overflow-x-auto pb-2">
-        <button onclick="filterCategory('all')" class="cat-btn active bg-blue-900 text-white px-3 py-1 rounded-full text-sm whitespace-nowrap">All</button>
-        <button onclick="filterCategory('Kitchen Utensils')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Utensils</button>
-        <button onclick="filterCategory('Kitchen Items')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Items</button>
-        <button onclick="filterCategory('Kitchen Gadgets')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Gadgets</button>
-        <button onclick="filterCategory('Home Appliance')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Home Appliance</button>
-        <button onclick="filterCategory('Home Gadgets')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Home Gadgets</button>
-        <button onclick="filterCategory('Fashion Items')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Fashion Items</button>
-        <button onclick="filterCategory('Fashion Accessories')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Fashion Accessories</button>
-        <button onclick="filterCategory('Jewellery')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Jewellery</button>
-        <button onclick="filterCategory('Beauty Item')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Beauty Item</button>
-        <button onclick="filterCategory('Interior Decor')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Interior Decor</button>
-        <button onclick="filterCategory('Lighting')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Lighting</button>
-        <button onclick="filterCategory('Furnitures')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Furnitures</button>
-        <button onclick="filterCategory('Phone Accessories')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Phone Accessories</button>
-        <button onclick="filterCategory('Power Bank')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Power Bank</button>
-        <button onclick="filterCategory('Health')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Health</button>
-      </div>
-    </div>
-  </header>
-
-  <div class="max-w-7xl mx-auto p-4">
-    <div id="products" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-    <div id="no-products" class="hidden text-center py-12 text-gray-500">No products found</div>
-  </div>
-
-  <div id="cart-sidebar" class="fixed right-0 top-0 h-full w-full md:w-96 bg-white shadow-2xl transform translate-x-full transition-transform p-6 overflow-y-auto z-50">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold">Your Cart</h2>
-      <button onclick="toggleCart()" class="text-2xl">&times;</button>
-    </div>
-    <div id="cart-items"></div>
-    <div class="border-t mt-6 pt-4 space-y-1 text-sm">
-      <div class="flex justify-between">
-        <span>Subtotal:</span>
-        <span id="cart-subtotal">₦0</span>
-      </div>
-      <div class="flex justify-between">
-        <span>VAT (7.5%):</span>
-        <span id="cart-vat">₦0</span>
-      </div>
-      <div class="flex justify-between text-xl font-bold pt-2 border-t">
-        <span>Total:</span>
-        <span id="cart-total">₦0</span>
-      </div>
-      <p class="text-xs text-gray-500">+ Shipping calculated at checkout</p>
-      <button onclick="checkout()" class="w-full bg-blue-900 text-white py-3 rounded-lg mt-4 font-semibold">Checkout</button>
-    </div>
-  </div>
-
-  <!-- ORDER + PAYMENT MODAL -->
-  <div id="order-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-lg max-w-md w-full p-6 max-h-screen overflow-y-auto">
-      <h2 class="text-2xl font-bold mb-4 text-blue-900">Complete Your Order</h2>
-      <form id="order-form" onsubmit="submitOrder(event)">
-        
-        <label class="block mb-3">
-          <span class="text-sm font-semibold">Full Name *</span>
-          <input required name="customer_name" class="w-full border rounded px-3 py-2 mt-1">
-        </label>
-        
-        <label class="block mb-3">
-          <span class="text-sm font-semibold">Phone / WhatsApp *</span>
-          <input required name="customer_phone" class="w-full border rounded px-3 py-2 mt-1">
-        </label>
-        
-        <label class="block mb-3">
-          <span class="text-sm font-semibold">Email *</span>
-          <input required type="email" name="customer_email" class="w-full border rounded px-3 py-2 mt-1">
-        </label>
-        
-        <div class="block mb-4">
-          <span class="text-sm font-semibold">Delivery Method *</span>
-          <div class="mt-2 space-y-2">
-            <label class="flex items-start gap-2 border rounded px-3 py-2 cursor-pointer hover:bg-gray-50">
-              <input type="radio" name="delivery_type" value="Pickup" required onchange="updateShippingCost()" class="mt-1">
-              <div>
-                <span class="font-semibold">Pickup at Store - FREE</span>
-                <p class="text-xs text-gray-600">Collect at Agege or Dopemu</p>
-              </div>
-            </label>
-            <label class="flex items-start gap-2 border rounded px-3 py-2 cursor-pointer hover:bg-gray-50">
-              <input type="radio" name="delivery_type" value="Waybill" required onchange="updateShippingCost()" class="mt-1">
-              <div>
-                <span class="font-semibold">Waybill Delivery</span>
-                <p class="text-xs text-gray-600">Lagos ₦3,000 | Others ₦5,000</p>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <div id="shipping-details" class="hidden mb-4">
-          <label class="block mb-3">
-            <span class="text-sm font-semibold">Full Delivery Address *</span>
-            <textarea name="address" class="w-full border rounded px-3 py-2 mt-1" rows="3" placeholder="Street, Area, City, State, Nearest Landmark"></textarea>
-          </label>
-        </div>
-
-        <label class="block mb-4">
-          <span class="text-sm font-semibold">Order Notes - Optional</span>
-          <textarea name="order_notes" class="w-full border rounded px-3 py-2 mt-1" rows="2" placeholder="Any special instructions? e.g. Call before delivery"></textarea>
-        </label>
-
-        <!-- ORDER SUMMARY WITH VAT -->
-        <div class="bg-blue-50 p-4 rounded mb-4 text-sm border border-blue-200">
-          <p class="font-bold mb-2 text-blue-900">Order Summary:</p>
-          <p><b>Order ID:</b> <span id="order-id-display" class="font-bold font-mono text-blue-900"></span></p>
-          <div class="space-y-1 mt-2">
-            <div class="flex justify-between"><span>Subtotal:</span><span id="modal-subtotal"></span></div>
-            <div class="flex justify-between"><span>VAT 7.5%:</span><span id="modal-vat"></span></div>
-            <div class="flex justify-between"><span>Shipping:</span><span id="modal-shipping">₦0</span></div>
-            <div class="flex justify-between font-bold text-lg pt-1 border-t"><span>Total to Pay:</span><span id="modal-total"></span></div>
-          </div>
-        </div>
-
-        <!-- BANK DETAILS - BOTH ACCOUNTS SHOWN -->
-        <div class="bg-green-50 p-4 rounded mb-4 text-sm border border-green-200">
-          <p class="font-bold mb-2 text-green-900">STEP 1: Make Payment to ANY Account Below</p>
-          <div class="space-y-3">
-            <div class="bg-white p-2 rounded border">
-              <p class="font-semibold">Option 1: Access Bank</p>
-              <p><b>Account Number:</b> 1920452449</p>
-              <p><b>Account Name:</b> FASH VARIETIES STORE</p>
-            </div>
-            <div class="bg-white p-2 rounded border">
-              <p class="font-semibold">Option 2: Moniepoint</p>
-              <p><b>Account Number:</b> 5271600556</p>
-              <p><b>Account Name:</b> FASH VARIETIES STORE</p>
-            </div>
-          </div>
-          <p class="mt-2 text-xs font-semibold">Transfer the exact total above. Use your Order ID as reference.</p>
-        </div>
-
-        <!-- RECEIPT UPLOAD - STEP 2 -->
-        <div class="bg-yellow-50 p-4 rounded mb-4 text-sm border border-yellow-200">
-          <p class="font-bold mb-2 text-yellow-900">STEP 2: Upload Payment Receipt *</p>
-          <input required type="file" id="receipt-file" accept="image/*,.pdf" class="w-full text-xs">
-          <p class="text-xs mt-1 text-gray-600">Screenshot or PDF of transfer. Max 5MB.</p>
-        </div>
-
-        <button type="submit" id="submit-btn" class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold mt-4">
-          Submit Order + Receipt
-        </button>
-        <button type="button" onclick="closeOrderModal()" class="w-full mt-2 text-gray-600">Cancel</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MISSION SECTION -->
-  <section class="bg-gray-100 py-12 px-4">
-    <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-3xl font-bold mb-4 text-blue-900">Our Mission</h2>
-      <p class="text-lg leading-relaxed text-gray-700 mb-8">
-        To deliver <span class="font-semibold text-blue-900">transparency, quality, and reliability</span> to every Nigerian home — 
-        making everything you need available in one trusted store.
-      </p>
-      <div class="grid md:grid-cols-3 gap-6 text-sm">
-        <div class="bg-white p-4 rounded-lg shadow">
-          <h3 class="font-bold text-blue-900 mb-2">TRANSPARENCY</h3>
-          <p class="text-gray-600">Upfront pricing with VAT 7.5%. Real stock per color. Pay to Access Bank or Moniepoint.</p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow">
-          <h3 class="font-bold text-blue-900 mb-2">QUALITY</h3>
-          <p class="text-gray-600">Hand-picked kitchen, home, fashion & beauty items. Multiple photos. Volume discounts.</p>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow">
-          <h3 class="font-bold text-blue-900 mb-2">RELIABILITY</h3>
-          <p class="text-gray-600">Nationwide delivery. Auto stock control. Payment verification. We get it right first.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="bg-blue-900 text-white py-8">
-    <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
-      <div>
-        <h3 class="font-bold text-lg mb-3">FASH VARIETIES STORE</h3>
-        <p class="text-sm">Our Customer Satisfaction is our priority. We deliver nationwide with the best quality.</p>
-        <p class="text-sm mt-2 font-semibold">No Refund No Exchange.</p>
-      </div>
-      <div>
-        <h3 class="font-bold text-lg mb-3">Business Hours</h3>
-        <p class="text-sm font-semibold">Mon - Sat: 7am - 8pm</p>
-        <p class="text-sm">Sunday: Closed</p>
-      </div>
-      <div>
-        <h3 class="font-bold text-lg mb-3">Contact Us</h3>
-        <p class="text-sm">Phone: <a href="tel:08155707964" class="underline">08155707964</a>, <a href="tel:0913256588" class="underline">0913256588</a></p>
-        <p class="text-sm">WhatsApp: <a href="https://wa.me/2348064414142" class="underline">08064414142</a></p>
-        <p class="text-sm">Email: deeflexconsult@gmail.com</p>
-      </div>
-      <div>
-        <h3 class="font-bold text-lg mb-3">Address</h3>
-        <p class="text-sm">111, Agege Motor Road, beside Isokoko Police Station, Agege Lagos.</p>
-        <p class="text-sm mt-2">23, Subola Street, Aluminium Village, Dopemu Agege</p>
-        <div class="mt-4">
-          <p class="font-bold text-lg mb-2">Find Us On Map</p>
-          <a href="https://maps.app.goo.gl/?q=111+Agege+Motor+Road+Lagos" target="_blank" class="block text-sm underline mb-1 hover:text-yellow-300">📍 Agege Branch - Click for Directions</a>
-          <a href="https://maps.app.goo.gl/?q=23+Subola+Street+Dopemu+Agege" target="_blank" class="block text-sm underline hover:text-yellow-300">📍 Dopemu Branch - Click for Directions</a>
-        </div>
-      </div>
-    </div>
-    <div class="text-center text-xs mt-8 text-blue-200 space-y-1">
-      <p>© 2026 FASH VARIETIES STORE. All rights reserved.</p>
-      <p>Design by <a href="mailto:kampcompany01@gmail.com" class="underline hover:text-white">kampcompany01@gmail.com</a></p>
-    </div>
-  </footer>
-
-  <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
-    <a href="https://wa.me/2348064414142" target="_blank" title="WhatsApp" class="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg flex items-center justify-center">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 0 0 0 7.994 0C3.627 0.068.628.032 4.08c0.474.01.955.01 1.443 0 4.47 3.225 7.01 7.01 7.01.474 0.955-.01 1.443-.01 3.546-.036 4.106-.628 4.08-4.08-.474 0-.955-.01-1.443-.01-3.786 0-6.825-3.039-6.825-6.825 0-.474.01-.955.01-1.443.036-3.546.628-4.106 4.08-4.08z"/></svg>
-    </a>
-    <a href="tel:+2348155707964" title="Call" class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg flex items-center justify-center">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0.178.643l2.457 2.457a.678.678 0 0 0.644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/></svg>
-    </a>
-  </div>
-
-  <script>
-  // REPLACE THESE 2 LINES
-  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-  const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
-  
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  const VAT_RATE = 0.075;
-  const WHATSAPP_NUMBER = '2348064414142';
-
-  let products = []
-  let cart = JSON.parse(localStorage.getItem('fash-cart') || '[]')
-  let currentCategory = 'all'
-  let selectedColors = {}
-  let imageIndex = {}
-  let currentOrderId = ''
-
-  function generateOrderId() {
-    const date = new Date()
-    const id = 'FVS-' + date.getFullYear().toString().slice(-2) +
-               (date.getMonth()+1).toString().padStart(2,'0') +
-               date.getDate().toString().padStart(2,'0') + '-' +
-               Math.random().toString(36).substr(2, 5).toUpperCase()
-    return id
-  }
-
-  function calcUnitPrice(product, qty) {
-    if (!product.volume_discounts ||!product.volume_discounts.length) return product.price
-    const tier = product.volume_discounts.sort((a,b) => b.min_qty - a.min_qty).find(t => qty >= t.min_qty)
-    return tier? product.price * (1 - tier.percent / 100) : product.price
-  }
-
-  function calculateCartTotals() {
-    const subtotal = cart.reduce((sum, item) => sum + calcUnitPrice(item, item.qty) * item.qty, 0)
-    const vat = Math.round(subtotal * VAT_RATE)
-    const total = subtotal + vat
-    return { subtotal, vat, total }
-  }
-
-  function getShippingCost() {
-    const deliveryType = document.querySelector('input[name="delivery_type"]:checked')?.value;
-    if (deliveryType === 'Pickup') return 0;
-    if (deliveryType === 'Waybill') {
-      const address = document.querySelector('textarea[name="address"]')?.value.toLowerCase() || '';
-      if (address.includes('lagos')) return 3000;
-      return 5000;
-    }
-    return 0;
-  }
-
-  function updateShippingCost() {
-    const shipping = getShippingCost();
-    document.getElementById('modal-shipping').textContent = `₦${shipping.toLocaleString()}`;
-    const { subtotal, vat } = calculateCartTotals();
-    const total = subtotal + vat + shipping;
-    document.getElementById('modal-total').textContent = `₦${total.toLocaleString()}`;
+    document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.qty, 0)
+    const cartItems = document.getElementById('cart-items')
     
-    const deliveryType = document.querySelector('input[name="delivery_type"]:checked')?.value;
-    document.getElementById('shipping-details').classList.toggle('hidden', deliveryType!== 'Waybill');
-    document.querySelector('textarea[name="address"]').required = deliveryType === 'Waybill';
-  }
-
-  const colorMap = {
-    'Red': '#ef4444', 'Blue': '#3b82f6', 'Green': '#22c55e', 'Black': '#000000',
-    'White': '#ffffff', 'Yellow': '#eab308', 'Pink': '#ec4899', 'Purple': '#a855f7',
-    'Orange': '#f97316', 'Brown': '#92400e', 'Grey': '#6b7280', 'Gray': '#6b7280',
-    'Gold': '#fbbf24', 'Silver': '#d1d5db', 'Navy': '#1e3a8a', 'Maroon': '#7f1d1d'
-  }
-
-  function selectColor(productId, color, stock) {
-    if (stock <= 0) return;
-    selectedColors[productId] = color;
-    document.querySelectorAll(`#product-${productId}.color-swatch`).forEach(swatch => {
-      swatch.classList.remove('selected');
-      if (swatch.dataset.color === color) swatch.classList.add('selected');
-    });
-    const qtyInput = document.getElementById(`qty-${productId}`);
-    qtyInput.max = stock;
-    if (parseInt(qtyInput.value) > stock) qtyInput.value = stock;
-  }
-
-  function showImage(productId, index) {
-    imageIndex[productId] = index
-    const img = document.getElementById(`img-${productId}`)
-    const dots = document.querySelectorAll(`#product-${productId}.image-dot`)
-    const product = products.find(p => p.id === productId)
-    if (product && product.images && product.images[index]) {
-      img.src = product.images[index]
+    if (cart.length === 0) {
+      cartItems.innerHTML = '<p class="text-gray-500 text-center py-8">Your cart is empty</p>'
+      document.getElementById('cart-total').textContent = '₦0'
+      return
     }
-    dots.forEach((dot, i) => {
-      dot.classList.toggle('active', i === index)
-    })
-  }
-
-  async function loadProducts() {
-    try {
-      const { data, error } = await supabase.from('products').select('*').gt('stock', 0);
-      if (error) throw error;
-
-      products = data.map(p => ({
-...p,
-        color_variants: p.color_variants || [],
-        images: [p.image1, p.image2, p.image3].filter(Boolean),
-        volume_discounts: []
-      }));
-
-      products.forEach(p => {
-        imageIndex[p.id] = 0;
-        const firstAvailable = p.color_variants?.find(v => v.stock > 0);
-        if (firstAvailable) selectedColors[p.id] = firstAvailable.color;
-      });
-
-      renderProducts();
-    } catch (err) {
-      console.error('Supabase error:', err);
-      document.getElementById('products').innerHTML = '<p class="text-center text-red-500">Could not load products. Check Supabase URL/Key.</p>';
-    }
-  }
-
-  function filterCategory(cat) {
-    currentCategory = cat;
-    document.querySelectorAll('.cat-btn').forEach(btn => {
-      btn.classList.remove('active', 'bg-blue-900', 'text-white');
-      btn.classList.add('bg-gray-200');
-    });
-    event.target.classList.add('active', 'bg-blue-900', 'text-white');
-    event.target.classList.remove('bg-gray-200');
-    renderProducts();
-  }
-
-  document.getElementById('search').addEventListener('input', (e) => renderProducts(e.target.value));
-
-  function renderProducts(searchTerm = '') {
-    const grid = document.getElementById('products');
-    const noProducts = document.getElementById('no-products');
-    let filtered = products;
-
-    if (currentCategory!== 'all') {
-      filtered = filtered.filter(p => p.category === currentCategory);
-    }
-    if (searchTerm) {
-      filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    }
-
-    if (filtered.length === 0) {
-      grid.innerHTML = '';
-      noProducts.classList.remove('hidden');
-      return;
-    }
-    noProducts.classList.add('hidden');
-
-    grid.innerHTML = filtered.map(p => {
-      const nextTier = p.volume_discounts?.sort((a,b) => a.min_qty - b.min_qty)[0];
-      const images = p.images && p.images.length > 0? p.images : ['https://placehold.co/300x300?text=No+Image'];
-      const capacityText = p.capacity_number && p.capacity_unit? `${p.capacity_number}${p.capacity_unit}` : '';
-      const sizeText = p.size? `Size: ${p.size}` : '';
-      const detailsText = [sizeText, capacityText].filter(Boolean).join(' • ');
-      const totalStock = p.color_variants?.reduce((sum, v) => sum + v.stock, 0) || p.stock;
-
+    
+    cartItems.innerHTML = cart.map(item => {
+      const unitPrice = calcUnitPrice(item, item.qty)
+      const itemTotal = unitPrice * item.qty
+      const hasDiscount = unitPrice < item.price
+      const variantText = [
+        item.selectedColor? `Color: ${item.selectedColor}` : '',
+        item.size? `Size: ${item.size}` : '',
+        item.capacity_number && item.capacity_unit? `${item.capacity_number}${item.capacity_unit}` : ''
+      ].filter(Boolean).join(' • ')
+      
       return `
-        <div id="product-${p.id}" class="bg-white rounded-lg shadow hover:shadow-lg transition p-3">
-          <div class="relative">
-            <img id="img-${p.id}" src="${images[0]}" alt="${p.name}" class="w-full h-48 object-cover rounded mb-2">
-            ${images.length > 1? `
-              <div class="image-dots">
-                ${images.map((_, i) => `<div class="image-dot ${i === 0? 'active' : ''}" onclick="showImage(${p.id}, ${i})"></div>`).join('')}
-              </div>
-            ` : ''}
+        <div class="border-b py-3">
+          <div class="flex justify-between">
+            <span class="font-semibold text-sm">${item.name}</span>
+            <button onclick="updateCartQty('${item.cartItemId}', 0)" class="text-red-500 text-sm">Remove</button>
           </div>
-          <h3 class="font-semibold text-sm h-10 overflow-hidden">${p.name}</h3>
-          ${detailsText? `<p class="text-xs text-gray-600 mb-1">${detailsText}</p>` : ''}
-          <p class="text-blue-900 text-xl font-bold">₦${p.price.toLocaleString()}</p>
-          ${nextTier? `<p class="text-green-600 text-xs">Buy ${nextTier.min_qty}+ for ${nextTier.percent}% off</p>` : '<p class="text-xs h-4"></p>'}
-          ${p.color_variants && p.color_variants.length > 0? `
-            <div class="flex flex-wrap gap-1 my-2">
-              ${p.color_variants.map((v, i) => `
-                <div class="color-swatch ${i === 0 && v.stock > 0? 'selected' : ''} ${v.stock <= 0? 'disabled' : ''}" 
-                     data-color="${v.color}"
-                     onclick="selectColor(${p.id}, '${v.color}', ${v.stock})">
-                  <div class="color-dot" style="background-color: ${colorMap[v.color] || '#9ca3af'}"></div>
-                  <span>${v.color}: ${v.stock}</span>
-                </div>
-              `).join('')}
+          ${variantText? `<p class="text-xs text-gray-600 mt-1">${variantText}</p>` : ''}
+          <div class="flex items-center justify-between mt-2">
+            <input type="number" min="1" max="${item.stock}" value="${item.qty}" onchange="updateCartQty('${item.cartItemId}', parseInt(this.value))" class="w-16 border rounded px-2 py-1 text-sm">
+            <div class="text-right">
+              ${hasDiscount? `<span class="line-through text-gray-400 text-xs">₦${item.price.toLocaleString()}</span>` : ''}
+              <div class="font-bold text-sm">₦${unitPrice.toLocaleString()}</div>
             </div>
-          ` : ''}
-          <div class="flex items-center gap-2 mt-2">
-            <input type="number" min="1" max="${totalStock}" value="1" id="qty-${p.id}" class="w-14 border rounded px-2 py-1 text-sm">
-            <button onclick="addToCart(${p.id})" class="flex-1 bg-blue-900 text-white py-1.5 rounded text-sm hover:bg-blue-800">Add</button>
           </div>
-          <p class="text-xs text-gray-500 mt-1">Total Stock: ${totalStock}</p>
+          <div class="text-right font-semibold text-sm mt-1">Subtotal: ₦${itemTotal.toLocaleString()}</div>
         </div>
       `
-    }).join('');
+    }).join('')
+    const total = cart.reduce((sum, item) => sum + calcUnitPrice(item, item.qty) * item.qty, 0)
+    document.getElementById('cart-total').textContent = `₦${total.toLocaleString()}`
   }
 
-  function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
-    const
+  function toggleCart() {
+    document.getElementById('cart-sidebar').classList.toggle('translate-x-full')
+  }
+  document.getElementById('cart-btn').onclick = toggleCart
+
+  let currentOrderId = ''
+  function checkout() {
+    if (cart.length === 0) return alert('Cart is empty')
+    currentOrderId = generateOrderId()
+    const total = cart.reduce((sum, item) => sum + calcUnitPrice(item, item.qty) * item.qty, 0)
+    document.getElementById('modal-total').textContent = `₦${total.toLocaleString()}`
+    document.getElementById('order-id-display').textContent = currentOrderId
+    document.getElementById('order-id-input').value = currentOrderId
+    const waMsg = `Hello FASH VARIETIES STORE, I just placed order ${currentOrderId} for ₦${total.toLocaleString()}. I will transfer now. My name is: `
+    document.getElementById('whatsapp-link-1').href = `https://wa.me/2348064414142?text=${encodeURIComponent(waMsg)}`
+    document.getElementById('whatsapp-link-2').href = `https://wa.me/2349060954176?text=${encodeURIComponent(waMsg)}`
+    document.getElementById('order-modal').classList.remove('hidden')
+    document.getElementById('order-modal').classList.add('flex')
+  }
+
+  function closeOrderModal() {
+    document.getElementById('order-modal').classList.add('hidden')
+    document.getElementById('order-modal').classList.remove('flex')
+  }
+
+  async function submitBankOrder(e) {
+    e.preventDefault()
+    const total = cart.reduce((sum, item) => sum + calcUnitPrice(item, item.qty) * item.qty, 0)
+    const orderDetails = cart.map(item => {
+      const variant = [
+        item.selectedColor? item.selectedColor : '',
+        item.size? item.size : '',
+        item.capacity_number && item.capacity_unit? `${item.capacity_number}${item.capacity_unit}` : ''
+      ].filter(Boolean).join('/')
+      return `${item.name} ${variant? `(${variant})` : ''} x${item.qty} @ ₦${calcUnitPrice(item, item.qty).toLocaleString()} = ₦${(calcUnitPrice(item, item.qty) * item.qty).toLocaleString()}`
+    }).join('\n')
+    
+    document.getElementById('order-details-input').value = orderDetails
+    document.getElementById('order-total-input').value = `₦${total.toLocaleString()}`
+    
+    const formData = new FormData(e.target)
+    
+    // Stock won't auto-update with Google Sheets. Update 'Quantity' column manually after each order.
+    console.log('Order received. Remember to reduce stock in Google Sheet manually.');
+    console.log('Order data:', {
+      order_id: currentOrderId,
+      customer_name: formData.get('customer_name'),
+      customer_phone: formData.get('customer_phone'),
+      customer_email: formData.get('customer_email'),
+      address: formData.get('address'),
+      items: cart,
+      total_amount: total
+    })
+    
+    setTimeout(() => {
+      cart = []
+      saveCart()
+      closeOrderModal()
+      loadProducts()
+      alert(`Order ${currentOrderId} received! Stock won't auto-update. Update your Google Sheet manually.`)
+    }, 1000)
+  }
+
+  // Init
+  loadProducts()
+  renderCart()
+</script>
+</body>
+</html>
