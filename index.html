@@ -5,14 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FASH VARIETIES STORE - Everything You Need, All In One Store</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-  .category-scroll::-webkit-scrollbar { display: none; }
-  .cat-btn.active { background-color: #1e3a8a; color: white; }
-  .color-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #e5e7eb; cursor: pointer; }
-  .color-dot.selected { border-color: #1e3a8a; box-shadow: 0 0 0 2px #dbeafe; }
-  .image-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; }
-  .image-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); }
-  .image-dot.active { background: white; }
+ .category-scroll::-webkit-scrollbar { display: none; }
+ .cat-btn.active { background-color: #1e3a8a; color: white; }
+ .color-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #e5e7eb; cursor: pointer; }
+ .color-dot.selected { border-color: #1e3a8a; box-shadow: 0 0 0 2px #dbeafe; }
+ .color-qty-btn { border: 1px solid #d1d5db; padding: 4px 8px; border-radius: 20px; font-size: 11px; cursor: pointer; background: white; }
+ .color-qty-btn.active { background: #1e3a8a; color: white; border-color: #1e3a8a; }
+ .image-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; max-width: 90%; }
+ .image-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.6); cursor: pointer; border: 1px solid rgba(0,0,0,0.2); }
+ .image-dot.active { background: white; border-color: #1e3a8a; }
   </style>
 </head>
 <body class="bg-gray-50">
@@ -31,9 +34,9 @@
           Cart (<span id="cart-count">0</span>)
         </button>
       </div>
-      
+
       <input id="search" placeholder="Search for products..." class="w-full border border-gray-300 rounded-lg px-4 py-2 mb-3">
-      
+
       <div class="category-scroll flex gap-2 overflow-x-auto pb-2">
         <button onclick="filterCategory('all')" class="cat-btn active bg-blue-900 text-white px-3 py-1 rounded-full text-sm whitespace-nowrap">All</button>
         <button onclick="filterCategory('Kitchen Appliances')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Appliances</button>
@@ -53,6 +56,16 @@
     <div id="no-products" class="hidden text-center py-12 text-gray-500">No products found</div>
   </div>
 
+  <!-- PRODUCT MODAL - Clickable to view products under category -->
+  <!-- This modal shows multiple images -->
+  <div id="product-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4 z-[60]">
+    <div class="bg-white rounded-lg max-w-3xl w-full p-5 max-h-[90vh] overflow-y-auto relative">
+      <button onclick="closeProductModal()" class="absolute top-3 right-3 text-2xl font-bold">&times;</button>
+      <div id="product-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- CART SIDEBAR - Same as old code -->
   <div id="cart-sidebar" class="fixed right-0 top-0 h-full w-full md:w-96 bg-white shadow-2xl transform translate-x-full transition-transform p-6 overflow-y-auto z-50">
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold">Your Cart</h2>
@@ -68,44 +81,87 @@
     </div>
   </div>
 
+  <!-- ORDER MODAL - Updated with new fields -->
   <div id="order-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
     <div class="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
       <h2 class="text-2xl font-bold mb-4 text-blue-900">Complete Your Order</h2>
-      <form name="bank-order" method="POST" data-netlify="true" onsubmit="submitBankOrder(event)">
-        <input type="hidden" name="form-name" value="bank-order" />
+      <form id="order-form" onsubmit="submitBankOrder(event)">
         <input type="hidden" name="order_id" id="order-id-input">
-        <input type="hidden" name="order_details" id="order-details-input">
-        <input type="hidden" name="order_total" id="order-total-input">
-        
+
         <label class="block mb-3">
           <span class="text-sm font-semibold">Full Name *</span>
           <input required name="customer_name" class="w-full border rounded px-3 py-2 mt-1">
         </label>
-        
+
         <label class="block mb-3">
           <span class="text-sm font-semibold">Phone / WhatsApp *</span>
           <input required name="customer_phone" class="w-full border rounded px-3 py-2 mt-1">
         </label>
-        
+
         <label class="block mb-3">
           <span class="text-sm font-semibold">Email *</span>
           <input required type="email" name="customer_email" class="w-full border rounded px-3 py-2 mt-1">
         </label>
-        
+
+        <!-- Order or Pickup Optional -->
+        <div class="block mb-3">
+          <span class="text-sm font-semibold">Fulfillment *</span>
+          <div class="flex gap-4 mt-1">
+            <label class="text-sm">
+              <input type="radio" name="fulfillment_type" value="Delivery" checked onchange="toggleFulfillment()"> Delivery (Order)
+            </label>
+            <label class="text-sm">
+              <input type="radio" name="fulfillment_type" value="Pickup" onchange="toggleFulfillment()"> Pickup
+            </label>
+          </div>
+        </div>
+
+        <!-- Delivery Fields -->
+        <div id="delivery-fields">
+          <label class="block mb-3">
+            <span class="text-sm font-semibold">Delivery Address *</span>
+            <textarea name="address" id="c_address" class="w-full border rounded px-3 py-2 mt-1" rows="2" placeholder="Street, City, State"></textarea>
+          </label>
+
+          <!-- Shipping Info -->
+          <label class="block mb-3">
+            <span class="text-sm font-semibold">Shipping Info</span>
+            <input name="shipping_info" class="w-full border rounded px-3 py-2 mt-1" placeholder="Landmark, LGA, Additional info">
+          </label>
+
+          <!-- Nearest Bus Stop Name - Part of shipping info -->
+          <label class="block mb-3">
+            <span class="text-sm font-semibold">Nearest Bus Stop Name *</span>
+            <input name="nearest_bus_stop" class="w-full border rounded px-3 py-2 mt-1" placeholder="e.g. Isokoko Bus Stop, Agege">
+          </label>
+
+          <!-- Take to Bus is 500 -->
+          <label class="flex items-center gap-2 mb-3 text-sm bg-yellow-50 p-2 rounded border">
+            <input type="checkbox" id="bus-fee-check" onchange="updateBusFee()"> Take to Bus - ₦500 (Optional)
+          </label>
+        </div>
+
+        <label class="block mb-3">
+          <span class="text-sm font-semibold">Order Message (Optional)</span>
+          <textarea name="order_message" class="w-full border rounded px-3 py-2 mt-1" rows="2"></textarea>
+        </label>
+
+        <!-- Receipt Upload Before Placing Order -->
         <label class="block mb-4">
-          <span class="text-sm font-semibold">Delivery Address *</span>
-          <textarea required name="address" class="w-full border rounded px-3 py-2 mt-1" rows="2" placeholder="Street, City, State"></textarea>
+          <span class="text-sm font-semibold">Upload Receipt * (Before placing order)</span>
+          <input required type="file" id="receipt-file" accept="image/*,application/pdf" class="w-full border rounded px-3 py-2 mt-1">
+          <span class="text-[11px] text-red-500">You must upload payment receipt before placing order</span>
         </label>
 
         <div class="bg-blue-50 p-4 rounded mb-4 text-sm border border-blue-200">
           <p class="font-bold mb-2 text-blue-900">Pay via Bank Transfer:</p>
-          
+
           <div class="mb-3">
             <p class="font-semibold">Option 1: Access Bank</p>
             <p><b>Account Number:</b> 1920452449</p>
             <p><b>Account Name:</b> FASH VARIETIES STORE</p>
           </div>
-          
+
           <div class="mb-3">
             <p class="font-semibold">Option 2: Moniepoint</p>
             <p><b>Account Number:</b> 5271600556</p>
@@ -115,22 +171,13 @@
           <div class="mt-3 pt-3 border-t border-blue-300">
             <p><b>Order ID:</b> <span id="order-id-display" class="font-bold font-mono text-blue-900"></span></p>
             <p><b>Amount to Pay:</b> <span id="modal-total" class="font-bold text-lg"></span></p>
+            <p id="bus-fee-display" class="hidden text-xs text-green-700">+ ₦500 bus fee included</p>
             <p class="mt-2 text-xs">Use your Order ID as payment reference. We deliver nationwide. No Refund No Exchange.</p>
           </div>
         </div>
 
-        <div class="space-y-2 mb-3">
-          <p class="text-sm font-semibold text-center">Notify Us on WhatsApp After Payment:</p>
-          <a id="whatsapp-link-1" target="_blank" class="block text-center bg-green-500 text-white py-2.5 rounded-lg font-semibold">
-            WhatsApp: 0806 441 4142
-          </a>
-          <a id="whatsapp-link-2" target="_blank" class="block text-center bg-green-600 text-white py-2.5 rounded-lg font-semibold">
-            WhatsApp: 0906 095 4176
-          </a>
-        </div>
-
-        <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold mt-4">
-          I Have Made / Will Make Payment
+        <button type="submit" id="place-order-btn" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold mt-4">
+          Place Order & Notify on WhatsApp
         </button>
         <button type="button" onclick="closeOrderModal()" class="w-full mt-2 text-gray-600">Cancel</button>
       </form>
@@ -159,15 +206,23 @@
         <h3 class="font-bold text-lg mb-3">Address</h3>
         <p class="text-sm">111, Agege Motor Road, beside Isokoko Police Station, Agege Lagos.</p>
         <p class="text-sm mt-2">23, Subola Street, Aluminium Village, Dopemu Agege</p>
+        <p class="text-sm mt-2">
+          <a href="https://maps.google.com/?q=111+Agege+Motor+Road+Agege+Lagos" target="_blank" class="underline text-blue-200">View on Map →</a>
+        </p>
       </div>
-    </div>
     <div class="text-center text-xs mt-8 text-blue-200">
-      © 2026 FASH VARIETIES STORE. All rights reserved.
+      © 2026 FASH VARIETIES STORE. All rights reserved. | Designed by kampcompany01@gmail.com
     </div>
   </footer>
 
   <script>
-  // FASH STORE - Google Sheets Version
+  // FASH STORE - Google Sheets Version - NEW SHEET ID + SUPABASE
+  // New Supabase URL and Key - CHANGED AS REQUESTED
+  const SUPABASE_URL = 'https://xatctwmvvjchbtdsytiu.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_onSQqNKSNjmtRej5u5Yjdw_45ymw4uJ';
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // New Google Sheet ID - CHANGED AS REQUESTED
   const SHEET_ID = '1LIR667-NTuHgChtX-aml3tMl-MovsTtPuJRbdKHMwyA';
   const SHEET_NAME = 'Sheet1';
 
@@ -175,13 +230,16 @@
   let cart = JSON.parse(localStorage.getItem('fash-cart') || '[]')
   let currentCategory = 'all'
   let selectedColors = {}
+  let selectedSizes = {}
   let imageIndex = {}
+  let busFeeAdded = false
+  let currentOrderId = ''
 
   function generateOrderId() {
     const date = new Date()
-    const id = 'FVS-' + date.getFullYear().toString().slice(-2) + 
-               (date.getMonth()+1).toString().padStart(2,'0') + 
-               date.getDate().toString().padStart(2,'0') + '-' + 
+    const id = 'FVS-' + date.getFullYear().toString().slice(-2) +
+               (date.getMonth()+1).toString().padStart(2,'0') +
+               date.getDate().toString().padStart(2,'0') + '-' +
                Math.random().toString(36).substr(2, 5).toUpperCase()
     return id
   }
@@ -190,6 +248,21 @@
     if (!product.volume_discounts ||!product.volume_discounts.length) return product.price
     const tier = product.volume_discounts.sort((a,b) => b.min_qty - a.min_qty).find(t => qty >= t.min_qty)
     return tier? product.price * (1 - tier.percent / 100) : product.price
+  }
+
+  // Parse Color Quantity String - Red:50, Blue:30
+  function parseColorQtyString(str){
+    const obj={};
+    if(!str) return obj;
+    str.toString().split(',').forEach(pair=>{
+      const parts=pair.split(':');
+      if(parts.length>=2){
+        const color=parts[0].trim();
+        const qty=parseInt(parts[1].trim());
+        if(color &&!isNaN(qty)) obj[color]=qty;
+      }
+    });
+    return obj;
   }
 
   const colorMap = {
@@ -205,6 +278,19 @@
       dot.classList.remove('selected')
       if (dot.dataset.color === color) dot.classList.add('selected')
     })
+    document.querySelectorAll(`#product-${productId}.color-qty-btn`).forEach(btn=>{
+      btn.classList.toggle('active', btn.dataset.color===color)
+    })
+    const p=products.find(x=>x.id===productId);
+    const avail=p.color_quantities[color]??p.stock;
+    const input=document.getElementById(`qty-${productId}`);
+    if(input){
+      input.max=avail;
+    }
+  }
+
+  function selectSize(productId, size){
+    selectedSizes[productId]=size;
   }
 
   function showImage(productId, index) {
@@ -220,15 +306,70 @@
     })
   }
 
+  // View Product - Clickable and view products under category
+  // Multiple view of products picture
+  function viewProduct(id){
+    const p=products.find(x=>x.id===id);
+    const images=p.images.length?p.images:[p.image_url||'https://placehold.co/300x300?text=No+Image'];
+    document.getElementById('product-modal-content').innerHTML=`
+      <img id="modal-main-img" src="${images[0]}" class="w-full h-80 object-cover rounded-lg mb-4">
+      <div class="flex gap-2 mb-3 overflow-x-auto pb-2">
+        ${images.map((img,i)=>`<img src="${img}" onclick="document.getElementById('modal-main-img').src='${img}'" class="w-20 h-20 object-cover rounded border-2 ${i===0?'border-blue-900':''} cursor-pointer flex-shrink-0">`).join('')}
+      </div>
+      <p class="text-xs text-gray-500 mb-2">${images.length} images uploaded from Google Sheet - Click thumbnail to view large</p>
+      <h2 class="text-xl font-bold cursor-pointer" onclick="filterCategory('${p.category}'); closeProductModal();">${p.name}</h2>
+      <p class="text-xs text-blue-600 underline cursor-pointer" onclick="filterCategory('${p.category}'); closeProductModal();">View all products under ${p.category}</p>
+      <p class="text-blue-900 text-2xl font-bold mt-2">₦${p.price.toLocaleString()}</p>
+      <p class="text-xs text-gray-500">Total Stock: ${p.stock}</p>
+      <div class="mt-3">
+        <p class="text-sm font-semibold">Color + Quantity Together:</p>
+        <div class="flex flex-wrap gap-2 mt-1">
+          ${(p.colors||[]).map(c=>{
+            const q=p.color_quantities[c]??p.stock;
+            return `<span class="border rounded-full px-3 py-1 text-xs bg-gray-50">${c}: ${q} qty</span>`;
+          }).join('')}
+        </div>
+      <div class="flex gap-2 mt-5">
+        <button onclick="filterCategory('${p.category}'); closeProductModal();" class="flex-1 bg-gray-100 border py-2 rounded-lg text-sm">View all in ${p.category}</button>
+        <button onclick="addToCart(${p.id}); closeProductModal();" class="flex-1 bg-blue-900 text-white py-2 rounded-lg text-sm">Add to Cart</button>
+      </div>`;
+    document.getElementById('product-modal').classList.remove('hidden');
+    document.getElementById('product-modal').classList.add('flex');
+  }
+
+  function closeProductModal(){
+    document.getElementById('product-modal').classList.add('hidden');
+    document.getElementById('product-modal').classList.remove('flex');
+  }
+
+  // Load Products - New tables Google Sheet
+  // Supports 10 images + color_quantities
   async function loadProducts() {
     try {
       const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
       const res = await fetch(url);
       const text = await res.text();
       const json = JSON.parse(text.substring(47).slice(0, -2));
-      
+
       products = json.table.rows.map((row, index) => {
         const c = row.c;
+
+        // Colors
+        const colors = c[6]?.v? c[6].v.split(',').map(s => s.trim()) : [];
+
+        // Color Quantities - Red:50, Blue:30
+        const color_quantities = parseColorQtyString(c[7]?.v || "");
+        if(colors.length && Object.keys(color_quantities).length===0){
+          const per=Math.floor((Number(c[5]?.v)||0)/colors.length);
+          colors.forEach(col=>{ color_quantities[col]=per; });
+        }
+
+        // 10 Images - Columns J to S (index 9 to 18)
+        const images = [];
+        for(let i=9; i<=18; i++){
+          if(c[i]?.v) images.push(c[i].v);
+        }
+
         return {
           id: index + 1,
           name: c[0]?.v || '',
@@ -237,22 +378,23 @@
           capacity_unit: c[3]?.v || '',
           price: Number(c[4]?.v) || 0,
           stock: Number(c[5]?.v) || 0,
-          colors: c[6]?.v? c[6].v.split(',').map(s => s.trim()) : [],
-          images: [c[7]?.v, c[8]?.v, c[9]?.v].filter(Boolean),
-          image_url: c[7]?.v || '',
-          category: c[12]?.v || 'all',
+          colors: colors,
+          color_quantities: color_quantities,
+          images: images.length? images : [c[7]?.v].filter(Boolean),
+          image_url: images[0] || c[7]?.v || '',
+          category: c[21]?.v || c[12]?.v || 'all',
           volume_discounts: [
-            c[10]?.v? {min_qty: 5, percent: Math.round((1 - c[10].v/c[4]?.v) * 100)} : null,
-            c[11]?.v? {min_qty: 10, percent: Math.round((1 - c[11].v/c[4]?.v) * 100)} : null
+            c[19]?.v? {min_qty: 5, percent: Math.round((1 - c[19].v/c[4]?.v) * 100)} : null,
+            c[20]?.v? {min_qty: 10, percent: Math.round((1 - c[20].v/c[4]?.v) * 100)} : null
           ].filter(Boolean)
         };
       }).filter(p => p.name && p.stock > 0);
-      
+
       products.forEach(p => {
         imageIndex[p.id] = 0
         if (p.colors && p.colors.length > 0) selectedColors[p.id] = p.colors[0]
       })
-      
+
       console.log('Products loaded from Sheet:', products);
       renderProducts()
     } catch (err) {
@@ -267,9 +409,11 @@
       btn.classList.remove('active', 'bg-blue-900', 'text-white')
       btn.classList.add('bg-gray-200')
     })
-    event.target.classList.add('active', 'bg-blue-900', 'text-white')
-    event.target.classList.remove('bg-gray-200')
-    renderProducts()
+    if(window.event && window.event.target){
+      window.event.target.classList.add('active', 'bg-blue-900', 'text-white')
+      window.event.target.classList.remove('bg-gray-200')
+    }
+    renderProducts(document.getElementById('search').value)
   }
 
   document.getElementById('search').addEventListener('input', (e) => renderProducts(e.target.value))
@@ -278,58 +422,58 @@
     const grid = document.getElementById('products')
     const noProducts = document.getElementById('no-products')
     let filtered = products
-    
+
     if (currentCategory!== 'all') {
       filtered = filtered.filter(p => p.category === currentCategory)
     }
     if (searchTerm) {
       filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
     }
-    
+
     if (filtered.length === 0) {
       grid.innerHTML = ''
       noProducts.classList.remove('hidden')
       return
     }
     noProducts.classList.add('hidden')
-    
+
     grid.innerHTML = filtered.map(p => {
       const nextTier = p.volume_discounts?.sort((a,b) => a.min_qty - b.min_qty)[0]
       const images = p.images && p.images.length > 0? p.images : [p.image_url || 'https://placehold.co/300x300?text=No+Image']
       const capacityText = p.capacity_number && p.capacity_unit? `${p.capacity_number}${p.capacity_unit}` : ''
       const sizeText = p.size? `Size: ${p.size}` : ''
       const detailsText = [sizeText, capacityText].filter(Boolean).join(' • ')
-      
+
       return `
         <div id="product-${p.id}" class="bg-white rounded-lg shadow hover:shadow-lg transition p-3">
-          <div class="relative">
-            <img id="img-${p.id}" src="${images[0]}" alt="${p.name}" class="w-full h-48 object-cover rounded mb-2">
+          <div class="relative" onclick="viewProduct(${p.id})">
+            <img id="img-${p.id}" src="${images[0]}" alt="${p.name}" class="w-full h-48 object-cover rounded mb-2 cursor-pointer">
             ${images.length > 1? `
               <div class="image-dots">
-                ${images.map((_, i) => `<div class="image-dot ${i === 0? 'active' : ''}" onclick="showImage(${p.id}, ${i})"></div>`).join('')}
+                ${images.map((_, i) => `<div class="image-dot ${i === 0? 'active' : ''}" onclick="event.stopPropagation(); showImage(${p.id}, ${i})"></div>`).join('')}
               </div>
+              <span class="absolute top-1 right-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">${images.length} imgs</span>
             ` : ''}
           </div>
-          <h3 class="font-semibold text-sm h-10 overflow-hidden">${p.name}</h3>
+          <h3 class="font-semibold text-sm h-10 overflow-hidden cursor-pointer" onclick="viewProduct(${p.id})">${p.name}</h3>
           ${detailsText? `<p class="text-xs text-gray-600 mb-1">${detailsText}</p>` : ''}
           <p class="text-blue-900 text-xl font-bold">₦${p.price.toLocaleString()}</p>
           ${nextTier? `<p class="text-green-600 text-xs">Buy ${nextTier.min_qty}+ for ${nextTier.percent}% off</p>` : '<p class="text-xs h-4"></p>'}
           ${p.colors && p.colors.length > 0? `
             <div class="flex gap-1 my-2">
-              ${p.colors.map((color, i) => `
-                <div class="color-dot ${i === 0? 'selected' : ''}" 
-                     style="background-color: ${colorMap[color] || '#9ca3af'}" 
-                     data-color="${color}"
-                     onclick="selectColor(${p.id}, '${color}')"
-                     title="${color}"></div>
-              `).join('')}
+              ${p.colors.map((color, i) => {
+                const qty = p.color_quantities[color]??p.stock;
+                return `
+                <button data-color="${color}" class="color-qty-btn ${i===0?'active':''}" onclick="selectColor(${p.id}, '${color}')">${color}: ${qty}</button>
+              `
+              }).join('')}
             </div>
           ` : ''}
           <div class="flex items-center gap-2 mt-2">
             <input type="number" min="1" max="${p.stock}" value="1" id="qty-${p.id}" class="w-14 border rounded px-2 py-1 text-sm">
             <button onclick="addToCart(${p.id})" class="flex-1 bg-blue-900 text-white py-1.5 rounded text-sm hover:bg-blue-800">Add</button>
           </div>
-          <p class="text-xs text-gray-500 mt-1">Stock: ${p.stock}</p>
+          <p class="text-xs text-gray-500 mt-1">Stock: ${p.stock} • ${images.length} imgs</p>
         </div>
       `
     }).join('')
@@ -339,26 +483,29 @@
     const product = products.find(p => p.id === productId)
     const qty = parseInt(document.getElementById(`qty-${productId}`).value) || 1
     const selectedColor = selectedColors[productId] || (product.colors? product.colors[0] : null)
-    
-    if (qty > product.stock) {
-      alert(`Only ${product.stock} left in stock`)
+    const selectedSize = selectedSizes[productId] || null
+    const availableQty = product.color_quantities[selectedColor]??product.stock
+
+    if (qty > availableQty) {
+      alert(`Only ${availableQty} left for ${selectedColor}`)
       return
     }
-    
-    const cartItemId = `${productId}-${selectedColor || 'default'}`
+
+    const cartItemId = `${productId}-${selectedColor || 'default'}-${selectedSize || 'default'}`
     const existing = cart.find(item => item.cartItemId === cartItemId)
-    
+
     if (existing) {
-      if (existing.qty + qty > product.stock) {
-        alert(`Cannot add more. Only ${product.stock} total in stock`)
+      if (existing.qty + qty > availableQty) {
+        alert(`Only ${availableQty} for ${selectedColor}`)
         return
       }
       existing.qty += qty
     } else {
       cart.push({
-     ...product, 
-        qty, 
+    ...product,
+        qty,
         selectedColor,
+        selectedSize,
         cartItemId
       })
     }
@@ -368,12 +515,13 @@
   function updateCartQty(cartItemId, qty) {
     const item = cart.find(i => i.cartItemId === cartItemId)
     if (!item) return
-    
+
     if (qty <= 0) {
       cart = cart.filter(i => i.cartItemId!== cartItemId)
     } else {
-      if (qty > item.stock) {
-        alert(`Only ${item.stock} in stock`)
+      const avail=item.color_quantities[item.selectedColor]??item.stock
+      if (qty > avail) {
+        alert(`Only ${avail} for ${item.selectedColor}`)
         return
       }
       item.qty = qty
@@ -389,38 +537,27 @@
   function renderCart() {
     document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.qty, 0)
     const cartItems = document.getElementById('cart-items')
-    
+
     if (cart.length === 0) {
       cartItems.innerHTML = '<p class="text-gray-500 text-center py-8">Your cart is empty</p>'
       document.getElementById('cart-total').textContent = '₦0'
       return
     }
-    
+
     cartItems.innerHTML = cart.map(item => {
       const unitPrice = calcUnitPrice(item, item.qty)
       const itemTotal = unitPrice * item.qty
-      const hasDiscount = unitPrice < item.price
-      const variantText = [
-        item.selectedColor? `Color: ${item.selectedColor}` : '',
-        item.size? `Size: ${item.size}` : '',
-        item.capacity_number && item.capacity_unit? `${item.capacity_number}${item.capacity_unit}` : ''
-      ].filter(Boolean).join(' • ')
-      
       return `
         <div class="border-b py-3">
           <div class="flex justify-between">
             <span class="font-semibold text-sm">${item.name}</span>
             <button onclick="updateCartQty('${item.cartItemId}', 0)" class="text-red-500 text-sm">Remove</button>
           </div>
-          ${variantText? `<p class="text-xs text-gray-600 mt-1">${variantText}</p>` : ''}
+          <p class="text-xs text-gray-600">Color: ${item.selectedColor||'-'} (${item.color_quantities[item.selectedColor]??item.stock} left)</p>
           <div class="flex items-center justify-between mt-2">
-            <input type="number" min="1" max="${item.stock}" value="${item.qty}" onchange="updateCartQty('${item.cartItemId}', parseInt(this.value))" class="w-16 border rounded px-2 py-1 text-sm">
-            <div class="text-right">
-              ${hasDiscount? `<span class="line-through text-gray-400 text-xs">₦${item.price.toLocaleString()}</span>` : ''}
-              <div class="font-bold text-sm">₦${unitPrice.toLocaleString()}</div>
-            </div>
+            <input type="number" min="1" value="${item.qty}" onchange="updateCartQty('${item.cartItemId}',parseInt(this.value))" class="w-16 border rounded px-2 py-1 text-sm">
+            <div class="font-bold text-sm">₦${itemTotal.toLocaleString()}</div>
           </div>
-          <div class="text-right font-semibold text-sm mt-1">Subtotal: ₦${itemTotal.toLocaleString()}</div>
         </div>
       `
     }).join('')
@@ -433,17 +570,28 @@
   }
   document.getElementById('cart-btn').onclick = toggleCart
 
+  function toggleFulfillment(){
+    const v=document.querySelector('input[name="fulfillment_type"]:checked').value;
+    document.getElementById('delivery-fields').style.display=v==='Pickup'?'none':'block';
+  }
+
+  function updateBusFee(){
+    busFeeAdded=document.getElementById('bus-fee-check').checked;
+    document.getElementById('bus-fee-display').classList.toggle('hidden',!busFeeAdded);
+    const base=cart.reduce((s,i)=>s+calcUnitPrice(i,i.qty)*i.qty,0);
+    const tot=base+(busFeeAdded?500:0);
+    document.getElementById('modal-total').textContent=`₦${tot.toLocaleString()}`;
+  }
+
   let currentOrderId = ''
   function checkout() {
     if (cart.length === 0) return alert('Cart is empty')
     currentOrderId = generateOrderId()
-    const total = cart.reduce((sum, item) => sum + calcUnitPrice(item, item.qty) * item.qty, 0)
-    document.getElementById('modal-total').textContent = `₦${total.toLocaleString()}`
+    const base=cart.reduce((s,i)=>s+calcUnitPrice(i,i.qty)*i.qty,0);
+    const tot=base+(busFeeAdded?500:0);
+    document.getElementById('modal-total').textContent = `₦${tot.toLocaleString()}`
     document.getElementById('order-id-display').textContent = currentOrderId
     document.getElementById('order-id-input').value = currentOrderId
-    const waMsg = `Hello FASH VARIETIES STORE, I just placed order ${currentOrderId} for ₦${total.toLocaleString()}. I will transfer now. My name is: `
-    document.getElementById('whatsapp-link-1').href = `https://wa.me/2348064414142?text=${encodeURIComponent(waMsg)}`
-    document.getElementById('whatsapp-link-2').href = `https://wa.me/2349060954176?text=${encodeURIComponent(waMsg)}`
     document.getElementById('order-modal').classList.remove('hidden')
     document.getElementById('order-modal').classList.add('flex')
   }
@@ -453,45 +601,57 @@
     document.getElementById('order-modal').classList.remove('flex')
   }
 
+  // Submit with receipt upload + WhatsApp auto
   async function submitBankOrder(e) {
     e.preventDefault()
-    const total = cart.reduce((sum, item) => sum + calcUnitPrice(item, item.qty) * item.qty, 0)
-    const orderDetails = cart.map(item => {
-      const variant = [
-        item.selectedColor? item.selectedColor : '',
-        item.size? item.size : '',
-        item.capacity_number && item.capacity_unit? `${item.capacity_number}${item.capacity_unit}` : ''
-      ].filter(Boolean).join('/')
-      return `${item.name} ${variant? `(${variant})` : ''} x${item.qty} @ ₦${calcUnitPrice(item, item.qty).toLocaleString()} = ₦${(calcUnitPrice(item, item.qty) * item.qty).toLocaleString()}`
-    }).join('\n')
-    
-    document.getElementById('order-details-input').value = orderDetails
-    document.getElementById('order-total-input').value = `₦${total.toLocaleString()}`
-    
-    const formData = new FormData(e.target)
-    
-    // Stock won't auto-update with Google Sheets. Update 'Quantity' column manually after each order.
-    console.log('Order received. Remember to reduce stock in Google Sheet manually.');
-    console.log('Order data:', {
-      order_id: currentOrderId,
-      customer_name: formData.get('customer_name'),
-      customer_phone: formData.get('customer_phone'),
-      customer_email: formData.get('customer_email'),
-      address: formData.get('address'),
-      items: cart,
-      total_amount: total
-    })
-    
-    setTimeout(() => {
-      cart = []
-      saveCart()
-      closeOrderModal()
-      loadProducts()
-      alert(`Order ${currentOrderId} received! Stock won't auto-update. Update your Google Sheet manually.`)
-    }, 1000)
+    const btn=document.getElementById('place-order-btn');
+    const file=document.getElementById('receipt-file').files[0];
+    if(!file) return alert('Upload receipt before placing order');
+    btn.textContent='Uploading receipt...';
+    btn.disabled=true;
+    try{
+      const fileName=`${currentOrderId}-${Date.now()}-${file.name}`;
+      const {error:upErr}=await supabaseClient.storage.from('receipts').upload(fileName,file);
+      if(upErr) throw upErr;
+      const {data:urlData}=supabaseClient.storage.from('receipts').getPublicUrl(fileName);
+      const receiptUrl=urlData.publicUrl;
+      const base=cart.reduce((s,i)=>s+calcUnitPrice(i,i.qty)*i.qty,0);
+      const total=base+(busFeeAdded?500:0);
+      const orderDetails=cart.map(i=>`${i.name} (${i.selectedColor||'-'}) x${i.qty} = ₦${(calcUnitPrice(i,i.qty)*i.qty).toLocaleString()}`).join('\n');
+      const form=new FormData(e.target);
+      await supabaseClient.from('orders').insert({
+        id:currentOrderId,
+        customer_name:form.get('customer_name'),
+        customer_phone:form.get('customer_phone'),
+        customer_email:form.get('customer_email'),
+        address:form.get('address')||'',
+        fulfillment_type:form.get('fulfillment_type'),
+        bus_fee:busFeeAdded,
+        shipping_info:form.get('shipping_info')||'',
+        nearest_bus_stop:form.get('nearest_bus_stop')||'',
+        order_message:form.get('order_message')||'',
+        order_details:orderDetails+(busFeeAdded?`\n+ Bus Fee: ₦500 (Bus Stop: ${form.get('nearest_bus_stop')})`:''),
+        total_amount:total,
+        receipt_url:receiptUrl,
+        status:'pending'
+      });
+      const waMsg=`🔔 NEW ORDER ${currentOrderId}%0AName: ${form.get('customer_name')}%0APhone: ${form.get('customer_phone')}%0ATotal: ₦${total.toLocaleString()}%0AFulfillment: ${form.get('fulfillment_type')}${busFeeAdded?' (+Bus ₦500 to '+form.get('nearest_bus_stop')+')':''}%0AShipping: ${form.get('shipping_info')||'-'}%0ABus Stop: ${form.get('nearest_bus_stop')||'-'}%0AItems:%0A${encodeURIComponent(orderDetails)}%0AReceipt: ${receiptUrl}`;
+      window.open(`https://wa.me/2348064414142?text=${waMsg}`,'_blank');
+      setTimeout(()=>{ window.open(`https://wa.me/2349060954176?text=${waMsg}`,'_blank'); }, 800);
+      cart=[];
+      saveCart();
+      closeOrderModal();
+      await loadProducts();
+      alert(`Order ${currentOrderId} placed! Receipt uploaded, WhatsApp sent automatically.`);
+    }catch(err){
+      alert('Failed: '+err.message);
+    }finally{
+      btn.textContent='Place Order & Notify on WhatsApp';
+      btn.disabled=false;
+    }
   }
 
-  // Init
+  // Init - Same as old code
   loadProducts()
   renderCart()
 </script>
