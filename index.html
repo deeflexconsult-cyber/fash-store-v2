@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +6,7 @@
   <title>FASH VARIETIES STORE - Everything You Need, All In One Store</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
 .category-scroll::-webkit-scrollbar { display: none; }
 .cat-btn.active { background-color: #1e3a8a; color: white; }
@@ -17,6 +17,10 @@
 .image-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; max-width: 90%; }
 .image-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.6); cursor: pointer; border: 1px solid rgba(0,0,0,0.2); }
 .image-dot.active { background: white; border-color: #1e3a8a; }
+.floating-btns { position: fixed; bottom: 20px; left: 20px; display: flex; flex-direction: column; gap: 12px; z-index: 100; }
+.float-whatsapp { width: 56px; height: 56px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); animation: pulse 2s infinite; }
+.float-call { width: 56px; height: 56px; background: #1e3a8a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37,211,102,0.7); } 70% { box-shadow: 0 0 0 10px rgba(37,211,102,0); } 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); } }
   </style>
 </head>
 <body class="bg-gray-50">
@@ -35,35 +39,39 @@
           Cart (<span id="cart-count">0</span>)
         </button>
       </div>
-
       <input id="search" placeholder="Search for products..." class="w-full border border-gray-300 rounded-lg px-4 py-2 mb-3">
-
       <div class="category-scroll flex gap-2 overflow-x-auto pb-2">
         <button onclick="filterCategory('all')" class="cat-btn active bg-blue-900 text-white px-3 py-1 rounded-full text-sm whitespace-nowrap">All</button>
-        <button onclick="filterCategory('Kitchen Appliances')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Appliances</button>
+        <button onclick="filterCategory('Kitchen Utensils')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Utensils</button>
+        <button onclick="filterCategory('Kitchen Items')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Items</button>
+        <button onclick="filterCategory('Kitchen Gadgets')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Kitchen Gadgets</button>
+        <button onclick="filterCategory('Home Appliances')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Home Appliances</button>
         <button onclick="filterCategory('Home Gadgets')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Home Gadgets</button>
         <button onclick="filterCategory('Fashion Items')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Fashion Items</button>
-        <button onclick="filterCategory('Beauty Item')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Beauty Items</button>
+        <button onclick="filterCategory('Fashion Accessories')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Fashion Accessories</button>
+        <button onclick="filterCategory('Jewellery')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Jewellery</button>
+        <button onclick="filterCategory('Beauty Items')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Beauty Items</button>
         <button onclick="filterCategory('Interior Decor')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Interior Decor</button>
         <button onclick="filterCategory('Lighting')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Lighting</button>
         <button onclick="filterCategory('Furniture')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Furniture</button>
         <button onclick="filterCategory('Phone Accessories')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Phone Accessories</button>
+        <button onclick="filterCategory('Power Banks')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Power Banks</button>
+        <button onclick="filterCategory('Health & Personal Care')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Health & Personal Care</button>
+        <button onclick="filterCategory('Babies and kiddies')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Babies and kiddies</button>
+        <button onclick="filterCategory('Back to school')" class="cat-btn bg-gray-200 px-3 py-1 rounded-full text-sm whitespace-nowrap">Back to school</button>
       </div>
     </div>
   </header>
-
   <div class="max-w-7xl mx-auto p-4">
     <div id="products" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
     <div id="no-products" class="hidden text-center py-12 text-gray-500">No products found</div>
   </div>
-
   <div id="product-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4 z-[60]">
     <div class="bg-white rounded-lg max-w-3xl w-full p-5 max-h-[90vh] overflow-y-auto relative">
       <button onclick="closeProductModal()" class="absolute top-3 right-3 text-2xl font-bold">&times;</button>
       <div id="product-modal-content"></div>
     </div>
   </div>
-
   <div id="cart-sidebar" class="fixed right-0 top-0 h-full w-full md:w-96 bg-white shadow-2xl transform translate-x-full transition-transform p-6 overflow-y-auto z-50">
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold">Your Cart</h2>
@@ -78,7 +86,6 @@
       <button onclick="checkout()" class="w-full bg-blue-900 text-white py-3 rounded-lg mt-4 font-semibold">Checkout</button>
     </div>
   </div>
-
   <div id="order-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
     <div class="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
       <h2 class="text-2xl font-bold mb-4 text-blue-900">Complete Your Order</h2>
@@ -102,12 +109,20 @@
           <div class="mb-3"><p class="font-semibold">Option 2: Moniepoint</p><p><b>Account Number:</b> 5271600556</p><p><b>Account Name:</b> FASH VARIETIES STORE</p></div>
           <div class="mt-3 pt-3 border-t border-blue-300"><p><b>Order ID:</b> <span id="order-id-display" class="font-bold font-mono text-blue-900"></span></p><p><b>Amount to Pay:</b> <span id="modal-total" class="font-bold text-lg"></span></p><p id="bus-fee-display" class="hidden text-xs text-green-700">+ ₦500 bus fee included</p><p class="mt-2 text-xs">Use your Order ID as payment reference. We deliver nationwide. No Refund No Exchange.</p></div>
         </div>
-        <button type="submit" id="place-order-btn" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold mt-4">Place Order & Notify on WhatsApp</button>
+        <button type="submit" id="place-order-btn" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold mt-4">Place Order</button>
+        <div id="auto-status" class="mt-2 text-center text-sm font-bold text-green-600"></div>
         <button type="button" onclick="closeOrderModal()" class="w-full mt-2 text-gray-600">Cancel</button>
       </form>
     </div>
   </div>
-
+  <div class="floating-btns">
+    <a href="https://wa.me/2348064414142" target="_blank" class="float-whatsapp" title="Chat on WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+    <a href="tel:08155707964" class="float-call" title="Call Us">
+      <i class="fas fa-phone"></i>
+    </a>
+  </div>
   <footer class="bg-blue-900 text-white mt-12 py-8">
     <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
       <div><h3 class="font-bold text-lg mb-3">FASH VARIETIES STORE</h3><p class="text-sm">Our Customer Satisfaction is our priority. We deliver nationwide with the best quality.</p><p class="text-sm mt-2 font-semibold">No Refund No Exchange.</p></div>
@@ -116,13 +131,16 @@
       <div><h3 class="font-bold text-lg mb-3">Address</h3><p class="text-sm">111, Agege Motor Road, beside Isokoko Police Station, Agege Lagos.</p><p class="text-sm mt-2">23, Subola Street, Aluminium Village, Dopemu Agege</p><p class="text-sm mt-2"><a href="https://maps.google.com/?q=111+Agege+Motor+Road+Agege+Lagos" target="_blank" class="underline text-blue-200">View on Map →</a></p></div></div>
     <div class="text-center text-xs mt-8 text-blue-200">© 2026 FASH VARIETIES STORE. All rights reserved. | Designed by kampcompany01@gmail.com</div>
   </footer>
-
   <script>
   const SUPABASE_URL = 'https://xatctwmvvjchbtdsytiu.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_onSQqNKSNjmtRej5u5Yjdw_45ymw4uJ';
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const SHEET_ID = '1LIR667-NTuHgChtX-aml3tMl-MovsTtPuJRbdKHMwyA';
   const SHEET_NAME = 'Sheet1';
+  const ULTRAMSG_INSTANCE = "instance187016";
+  const ULTRAMSG_TOKEN = "igathjad5xpejd5v";
+  const SELLER_NUMBERS = ["2348064414142", "2349060954176"];
+  const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyS70nRK00Q7_TIVoSfxEfusiKgoxOiTn0Go_ppLLNhmyXkN4wMZ00G-WxnJaKQwg64fA/exec";
   let products = []
   let cart = JSON.parse(localStorage.getItem('fash-cart') || '[]')
   let currentCategory = 'all'
@@ -153,12 +171,6 @@
       }
     });
     return obj;
-  }
-  const colorMap = {
-    'Red': '#ef4444', 'Blue': '#3b82f6', 'Green': '#22c55e', 'Black': '#000000',
-    'White': '#ffffff', 'Yellow': '#eab308', 'Pink': '#ec4899', 'Purple': '#a855f7',
-    'Orange': '#f97316', 'Brown': '#92400e', 'Grey': '#6b7280', 'Gray': '#6b7280',
-    'Gold': '#fbbf24', 'Silver': '#d1d5db', 'Navy': '#1e3a8a', 'Maroon': '#7f1d1d'
   }
   function selectColor(productId, color) {
     selectedColors[productId] = color
@@ -211,33 +223,22 @@
     document.getElementById('product-modal').classList.add('hidden');
     document.getElementById('product-modal').classList.remove('flex');
   }
-
-  // ====== FIXED GOOGLE SHEET READER ONLY - NO OTHER CHANGES ======
   async function loadProducts() {
     try {
       const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}&t=${Date.now()}`;
       const res = await fetch(url);
       const text = await res.text();
       const json = JSON.parse(text.substring(47).slice(0, -2));
-
       products = json.table.rows.map((row, index) => {
         const c = row.c;
         if(!c[0]?.v) return null;
         const name = c[0].v.toString().trim();
         if(name.toLowerCase()==='name' || name.length<3) return null;
-
-        // FIXED INDEXES BASED ON YOUR SCREENSHOTS:
-        // A=0 name, B=1 size, C=2 capacity_number, D=3 capacity_unit, E=4 price, F=5 stock, G=6 colors, H=7 color_quantity, I=8 image1... R=17 image10, S=18 price_5qty, T=19 price_10qty, U=20 categories
         const colors = c[6]?.v? c[6].v.split(',').map(s => s.trim()).filter(Boolean) : [];
         const color_quantities = parseColorQtyString(c[7]?.v || "");
-
         const images = [];
-        for(let i=8; i<=17; i++){ // I to R = image1 to image10
-          if(c[i]?.v && c[i].v.toString().trim().startsWith('http')) images.push(c[i].v.toString().trim());
-        }
-
-        const cat = (c[20]?.v || 'all').toString().trim(); // U = categories
-
+        for(let i=8; i<=17; i++){ if(c[i]?.v && c[i].v.toString().trim().startsWith('http')) images.push(c[i].v.toString().trim()); }
+        const cat = (c[20]?.v || 'all').toString().trim();
         return {
           id: index + 1,
           name: c[0]?.v || '',
@@ -257,20 +258,16 @@
           ].filter(Boolean)
         };
       }).filter(p => p && p.name && p.price > 0 && p.stock > 0);
-
       products.forEach(p => {
         imageIndex[p.id] = 0
         if (p.colors && p.colors.length > 0) selectedColors[p.id] = p.colors[0]
       })
-
-      console.log('Products loaded:', products);
       renderProducts()
     } catch (err) {
       console.error('Sheet error:', err);
-      document.getElementById('products').innerHTML = '<p class="text-center text-red-500 p-4">Could not load products. Make sure Sheet is public: Share → Anyone with the link → Viewer, and price/stock filled</p>'
+      document.getElementById('products').innerHTML = '<p class="text-center text-red-500 p-4">Could not load products.</p>'
     }
   }
-
   function filterCategory(cat) {
     currentCategory = cat
     document.querySelectorAll('.cat-btn').forEach(btn => {
@@ -281,11 +278,6 @@
         btn.classList.remove('bg-gray-200')
       }
     })
-    if(window.event && window.event.target && window.event.target.classList.contains('cat-btn')){
-      document.querySelectorAll('.cat-btn').forEach(b=>{b.classList.remove('active','bg-blue-900','text-white'); b.classList.add('bg-gray-200')})
-      window.event.target.classList.add('active', 'bg-blue-900', 'text-white')
-      window.event.target.classList.remove('bg-gray-200')
-    }
     renderProducts(document.getElementById('search').value)
   }
   document.getElementById('search').addEventListener('input', (e) => renderProducts(e.target.value))
@@ -319,7 +311,7 @@
         </div>
       `
     }).join('')
-)
+  }
   function addToCart(productId) {
     const product = products.find(p => p.id === productId)
     const qty = parseInt(document.getElementById(`qty-${productId}`).value) || 1
@@ -374,12 +366,50 @@
     document.getElementById('order-modal').classList.add('flex')
   }
   function closeOrderModal() { document.getElementById('order-modal').classList.add('hidden'); document.getElementById('order-modal').classList.remove('flex') }
+  async function sendAutoWhatsApp(message){
+    const statusEl = document.getElementById('auto-status');
+    statusEl.innerHTML = "⏳ Sending order automatically...";
+    for(let num of SELLER_NUMBERS){
+      try{
+        const fd = new FormData();
+        fd.append('token', ULTRAMSG_TOKEN);
+        fd.append('to', num);
+        fd.append('body', message);
+        const r = await fetch(`https://api.ultramsg.com/${ULTRAMSG_INSTANCE}/messages/chat`, { method: 'POST', body: fd });
+        const d = await r.json();
+      }catch(e){}
+    }
+    statusEl.innerHTML = "✅ Order sent automatically to seller WhatsApp!";
+  }
+  async function reduceStockViaAppScript(){
+    try{
+      const payload = {
+        action: "reduceStock",
+        orderId: currentOrderId,
+        items: cart.map(i => ({
+          id: i.id,
+          name: i.name,
+          qty: i.qty,
+          color: i.selectedColor || "",
+          rowIndex: i.id + 1
+        }))
+      };
+      await fetch(APP_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const query = encodeURIComponent(JSON.stringify(payload));
+      await fetch(`${APP_SCRIPT_URL}?data=${query}`, { mode: 'no-cors' });
+    }catch(e){}
+  }
   async function submitBankOrder(e) {
     e.preventDefault()
     const btn=document.getElementById('place-order-btn');
     const file=document.getElementById('receipt-file').files[0];
     if(!file) return alert('Upload receipt before placing order');
-    btn.textContent='Uploading receipt...'; btn.disabled=true;
+    btn.textContent='Processing... Uploading & Sending Automatically'; btn.disabled=true;
     try{
       const fileName=`${currentOrderId}-${Date.now()}-${file.name}`;
       const {error:upErr}=await supabaseClient.storage.from('receipts').upload(fileName,file);
@@ -406,12 +436,15 @@
         receipt_url:receiptUrl,
         status:'pending'
       });
-      const waMsg=`🔔 NEW ORDER ${currentOrderId}%0AName: ${form.get('customer_name')}%0APhone: ${form.get('customer_phone')}%0ATotal: ₦${total.toLocaleString()}%0AFulfillment: ${form.get('fulfillment_type')}${busFeeAdded?' (+Bus ₦500 to '+form.get('nearest_bus_stop')+')':''}%0AShipping: ${form.get('shipping_info')||'-'}%0ABus Stop: ${form.get('nearest_bus_stop')||'-'}%0AItems:%0A${encodeURIComponent(orderDetails)}%0AReceipt: ${receiptUrl}`;
-      window.open(`https://wa.me/2348064414142?text=${waMsg}`,'_blank');
-      setTimeout(()=>{ window.open(`https://wa.me/2349060954176?text=${waMsg}`,'_blank'); }, 800);
-      cart=[]; saveCart(); closeOrderModal(); await loadProducts();
-      alert(`Order ${currentOrderId} placed! Receipt uploaded, WhatsApp sent automatically.`);
-    }catch(err){ alert('Failed: '+err.message); }finally{ btn.textContent='Place Order & Notify on WhatsApp'; btn.disabled=false; }
+      await reduceStockViaAppScript();
+      const autoMsg = `🔥 *NEW ORDER - FASH VARIETIES* 🔥\n\n🆔 Order ID: ${currentOrderId}\n👤 Name: ${form.get('customer_name')}\n📞 Phone: ${form.get('customer_phone')}\n📧 Email: ${form.get('customer_email')}\n🏠 Address: ${form.get('address')||'-'}\n🚚 Fulfillment: ${form.get('fulfillment_type')}${busFeeAdded?' (+Bus ₦500 to '+form.get('nearest_bus_stop')+')':''}\n🚌 Bus Stop: ${form.get('nearest_bus_stop')||'-'}\n📝 Shipping: ${form.get('shipping_info')||'-'}\n💬 Msg: ${form.get('order_message')||'-'}\n\n📦 *ITEMS:*\n${orderDetails}${busFeeAdded?'\n+ Bus Fee: ₦500':''}\n\n💰 *TOTAL: ₦${total.toLocaleString()}*\n\n🧾 Receipt: ${receiptUrl}\n\n✅ Stock auto-reduced via App Script`;
+      await sendAutoWhatsApp(autoMsg);
+      cart=[]; saveCart();
+      setTimeout(()=>{ closeOrderModal(); loadProducts(); }, 2000);
+      alert(`✅ Order ${currentOrderId} placed successfully!\n\nYour order has been sent AUTOMATICALLY to seller WhatsApp.\nStock has been reduced automatically.\n\nSeller will confirm shortly!`);
+    }catch(err){
+      alert('Error: '+err.message);
+    }finally{ btn.textContent='Place Order'; btn.disabled=false; }
   }
   loadProducts()
   renderCart()
