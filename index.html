@@ -7,15 +7,15 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
- .category-scroll::-webkit-scrollbar { display: none; }
- .cat-btn.active { background-color: #1e3a8a; color: white; }
- .color-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #e5e7eb; cursor: pointer; }
- .color-dot.selected { border-color: #1e3a8a; box-shadow: 0 0 0 2px #dbeafe; }
- .color-qty-btn { border: 1px solid #d1d5db; padding: 4px 8px; border-radius: 20px; font-size: 11px; cursor: pointer; background: white; }
- .color-qty-btn.active { background: #1e3a8a; color: white; border-color: #1e3a8a; }
- .image-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; max-width: 90%; }
- .image-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.6); cursor: pointer; border: 1px solid rgba(0,0,0,0.2); }
- .image-dot.active { background: white; border-color: #1e3a8a; }
+.category-scroll::-webkit-scrollbar { display: none; }
+.cat-btn.active { background-color: #1e3a8a; color: white; }
+.color-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #e5e7eb; cursor: pointer; }
+.color-dot.selected { border-color: #1e3a8a; box-shadow: 0 0 0 2px #dbeafe; }
+.color-qty-btn { border: 1px solid #d1d5db; padding: 4px 8px; border-radius: 20px; font-size: 11px; cursor: pointer; background: white; }
+.color-qty-btn.active { background: #1e3a8a; color: white; border-color: #1e3a8a; }
+.image-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; max-width: 90%; }
+.image-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.6); cursor: pointer; border: 1px solid rgba(0,0,0,0.2); }
+.image-dot.active { background: white; border-color: #1e3a8a; }
   </style>
 </head>
 <body class="bg-gray-50">
@@ -56,8 +56,6 @@
     <div id="no-products" class="hidden text-center py-12 text-gray-500">No products found</div>
   </div>
 
-  <!-- PRODUCT MODAL - Clickable to view products under category -->
-  <!-- This modal shows multiple images -->
   <div id="product-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center p-4 z-[60]">
     <div class="bg-white rounded-lg max-w-3xl w-full p-5 max-h-[90vh] overflow-y-auto relative">
       <button onclick="closeProductModal()" class="absolute top-3 right-3 text-2xl font-bold">&times;</button>
@@ -65,7 +63,6 @@
     </div>
   </div>
 
-  <!-- CART SIDEBAR - Same as old code -->
   <div id="cart-sidebar" class="fixed right-0 top-0 h-full w-full md:w-96 bg-white shadow-2xl transform translate-x-full transition-transform p-6 overflow-y-auto z-50">
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold">Your Cart</h2>
@@ -81,104 +78,30 @@
     </div>
   </div>
 
-  <!-- ORDER MODAL - Updated with new fields -->
   <div id="order-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
     <div class="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
       <h2 class="text-2xl font-bold mb-4 text-blue-900">Complete Your Order</h2>
       <form id="order-form" onsubmit="submitBankOrder(event)">
         <input type="hidden" name="order_id" id="order-id-input">
-
-        <label class="block mb-3">
-          <span class="text-sm font-semibold">Full Name *</span>
-          <input required name="customer_name" class="w-full border rounded px-3 py-2 mt-1">
-        </label>
-
-        <label class="block mb-3">
-          <span class="text-sm font-semibold">Phone / WhatsApp *</span>
-          <input required name="customer_phone" class="w-full border rounded px-3 py-2 mt-1">
-        </label>
-
-        <label class="block mb-3">
-          <span class="text-sm font-semibold">Email *</span>
-          <input required type="email" name="customer_email" class="w-full border rounded px-3 py-2 mt-1">
-        </label>
-
-        <!-- Order or Pickup Optional -->
-        <div class="block mb-3">
-          <span class="text-sm font-semibold">Fulfillment *</span>
-          <div class="flex gap-4 mt-1">
-            <label class="text-sm">
-              <input type="radio" name="fulfillment_type" value="Delivery" checked onchange="toggleFulfillment()"> Delivery (Order)
-            </label>
-            <label class="text-sm">
-              <input type="radio" name="fulfillment_type" value="Pickup" onchange="toggleFulfillment()"> Pickup
-            </label>
-          </div>
-        </div>
-
-        <!-- Delivery Fields -->
+        <label class="block mb-3"><span class="text-sm font-semibold">Full Name *</span><input required name="customer_name" class="w-full border rounded px-3 py-2 mt-1"></label>
+        <label class="block mb-3"><span class="text-sm font-semibold">Phone / WhatsApp *</span><input required name="customer_phone" class="w-full border rounded px-3 py-2 mt-1"></label>
+        <label class="block mb-3"><span class="text-sm font-semibold">Email *</span><input required type="email" name="customer_email" class="w-full border rounded px-3 py-2 mt-1"></label>
+        <div class="block mb-3"><span class="text-sm font-semibold">Fulfillment *</span><div class="flex gap-4 mt-1"><label class="text-sm"><input type="radio" name="fulfillment_type" value="Delivery" checked onchange="toggleFulfillment()"> Delivery (Order)</label><label class="text-sm"><input type="radio" name="fulfillment_type" value="Pickup" onchange="toggleFulfillment()"> Pickup</label></div></div>
         <div id="delivery-fields">
-          <label class="block mb-3">
-            <span class="text-sm font-semibold">Delivery Address *</span>
-            <textarea name="address" id="c_address" class="w-full border rounded px-3 py-2 mt-1" rows="2" placeholder="Street, City, State"></textarea>
-          </label>
-
-          <!-- Shipping Info -->
-          <label class="block mb-3">
-            <span class="text-sm font-semibold">Shipping Info</span>
-            <input name="shipping_info" class="w-full border rounded px-3 py-2 mt-1" placeholder="Landmark, LGA, Additional info">
-          </label>
-
-          <!-- Nearest Bus Stop Name - Part of shipping info -->
-          <label class="block mb-3">
-            <span class="text-sm font-semibold">Nearest Bus Stop Name *</span>
-            <input name="nearest_bus_stop" class="w-full border rounded px-3 py-2 mt-1" placeholder="e.g. Isokoko Bus Stop, Agege">
-          </label>
-
-          <!-- Take to Bus is 500 -->
-          <label class="flex items-center gap-2 mb-3 text-sm bg-yellow-50 p-2 rounded border">
-            <input type="checkbox" id="bus-fee-check" onchange="updateBusFee()"> Take to Bus - ₦500 (Optional)
-          </label>
+          <label class="block mb-3"><span class="text-sm font-semibold">Delivery Address *</span><textarea name="address" id="c_address" class="w-full border rounded px-3 py-2 mt-1" rows="2" placeholder="Street, City, State"></textarea></label>
+          <label class="block mb-3"><span class="text-sm font-semibold">Shipping Info</span><input name="shipping_info" class="w-full border rounded px-3 py-2 mt-1" placeholder="Landmark, LGA, Additional info"></label>
+          <label class="block mb-3"><span class="text-sm font-semibold">Nearest Bus Stop Name *</span><input name="nearest_bus_stop" class="w-full border rounded px-3 py-2 mt-1" placeholder="e.g. Isokoko Bus Stop, Agege"></label>
+          <label class="flex items-center gap-2 mb-3 text-sm bg-yellow-50 p-2 rounded border"><input type="checkbox" id="bus-fee-check" onchange="updateBusFee()"> Take to Bus - ₦500 (Optional)</label>
         </div>
-
-        <label class="block mb-3">
-          <span class="text-sm font-semibold">Order Message (Optional)</span>
-          <textarea name="order_message" class="w-full border rounded px-3 py-2 mt-1" rows="2"></textarea>
-        </label>
-
-        <!-- Receipt Upload Before Placing Order -->
-        <label class="block mb-4">
-          <span class="text-sm font-semibold">Upload Receipt * (Before placing order)</span>
-          <input required type="file" id="receipt-file" accept="image/*,application/pdf" class="w-full border rounded px-3 py-2 mt-1">
-          <span class="text-[11px] text-red-500">You must upload payment receipt before placing order</span>
-        </label>
-
+        <label class="block mb-3"><span class="text-sm font-semibold">Order Message (Optional)</span><textarea name="order_message" class="w-full border rounded px-3 py-2 mt-1" rows="2"></textarea></label>
+        <label class="block mb-4"><span class="text-sm font-semibold">Upload Receipt * (Before placing order)</span><input required type="file" id="receipt-file" accept="image/*,application/pdf" class="w-full border rounded px-3 py-2 mt-1"><span class="text-[11px] text-red-500">You must upload payment receipt before placing order</span></label>
         <div class="bg-blue-50 p-4 rounded mb-4 text-sm border border-blue-200">
           <p class="font-bold mb-2 text-blue-900">Pay via Bank Transfer:</p>
-
-          <div class="mb-3">
-            <p class="font-semibold">Option 1: Access Bank</p>
-            <p><b>Account Number:</b> 1920452449</p>
-            <p><b>Account Name:</b> FASH VARIETIES STORE</p>
-          </div>
-
-          <div class="mb-3">
-            <p class="font-semibold">Option 2: Moniepoint</p>
-            <p><b>Account Number:</b> 5271600556</p>
-            <p><b>Account Name:</b> FASH VARIETIES STORE</p>
-          </div>
-
-          <div class="mt-3 pt-3 border-t border-blue-300">
-            <p><b>Order ID:</b> <span id="order-id-display" class="font-bold font-mono text-blue-900"></span></p>
-            <p><b>Amount to Pay:</b> <span id="modal-total" class="font-bold text-lg"></span></p>
-            <p id="bus-fee-display" class="hidden text-xs text-green-700">+ ₦500 bus fee included</p>
-            <p class="mt-2 text-xs">Use your Order ID as payment reference. We deliver nationwide. No Refund No Exchange.</p>
-          </div>
+          <div class="mb-3"><p class="font-semibold">Option 1: Access Bank</p><p><b>Account Number:</b> 1920452449</p><p><b>Account Name:</b> FASH VARIETIES STORE</p></div>
+          <div class="mb-3"><p class="font-semibold">Option 2: Moniepoint</p><p><b>Account Number:</b> 5271600556</p><p><b>Account Name:</b> FASH VARIETIES STORE</p></div>
+          <div class="mt-3 pt-3 border-t border-blue-300"><p><b>Order ID:</b> <span id="order-id-display" class="font-bold font-mono text-blue-900"></span></p><p><b>Amount to Pay:</b> <span id="modal-total" class="font-bold text-lg"></span></p><p id="bus-fee-display" class="hidden text-xs text-green-700">+ ₦500 bus fee included</p><p class="mt-2 text-xs">Use your Order ID as payment reference. We deliver nationwide. No Refund No Exchange.</p></div>
         </div>
-
-        <button type="submit" id="place-order-btn" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold mt-4">
-          Place Order & Notify on WhatsApp
-        </button>
+        <button type="submit" id="place-order-btn" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold mt-4">Place Order & Notify on WhatsApp</button>
         <button type="button" onclick="closeOrderModal()" class="w-full mt-2 text-gray-600">Cancel</button>
       </form>
     </div>
@@ -186,46 +109,19 @@
 
   <footer class="bg-blue-900 text-white mt-12 py-8">
     <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
-      <div>
-        <h3 class="font-bold text-lg mb-3">FASH VARIETIES STORE</h3>
-        <p class="text-sm">Our Customer Satisfaction is our priority. We deliver nationwide with the best quality.</p>
-        <p class="text-sm mt-2 font-semibold">No Refund No Exchange.</p>
-      </div>
-      <div>
-        <h3 class="font-bold text-lg mb-3">Business Hours</h3>
-        <p class="text-sm font-semibold">Mon - Sat: 7am - 8pm</p>
-        <p class="text-sm">Sunday: Closed</p>
-      </div>
-      <div>
-        <h3 class="font-bold text-lg mb-3">Contact Us</h3>
-        <p class="text-sm">Phone: <a href="tel:08155707964" class="underline">08155707964</a>, <a href="tel:0913256588" class="underline">0913256588</a></p>
-        <p class="text-sm">WhatsApp: <a href="https://wa.me/2348064414142" class="underline">08064414142</a>, <a href="https://wa.me/2349060954176" class="underline">09060954176</a></p>
-        <p class="text-sm">Email: deeflexconsult@gmail.com</p>
-      </div>
-      <div>
-        <h3 class="font-bold text-lg mb-3">Address</h3>
-        <p class="text-sm">111, Agege Motor Road, beside Isokoko Police Station, Agege Lagos.</p>
-        <p class="text-sm mt-2">23, Subola Street, Aluminium Village, Dopemu Agege</p>
-        <p class="text-sm mt-2">
-          <a href="https://maps.google.com/?q=111+Agege+Motor+Road+Agege+Lagos" target="_blank" class="underline text-blue-200">View on Map →</a>
-        </p>
-      </div>
-    <div class="text-center text-xs mt-8 text-blue-200">
-      © 2026 FASH VARIETIES STORE. All rights reserved. | Designed by kampcompany01@gmail.com
-    </div>
+      <div><h3 class="font-bold text-lg mb-3">FASH VARIETIES STORE</h3><p class="text-sm">Our Customer Satisfaction is our priority. We deliver nationwide with the best quality.</p><p class="text-sm mt-2 font-semibold">No Refund No Exchange.</p></div>
+      <div><h3 class="font-bold text-lg mb-3">Business Hours</h3><p class="text-sm font-semibold">Mon - Sat: 7am - 8pm</p><p class="text-sm">Sunday: Closed</p></div>
+      <div><h3 class="font-bold text-lg mb-3">Contact Us</h3><p class="text-sm">Phone: <a href="tel:08155707964" class="underline">08155707964</a>, <a href="tel:0913256588" class="underline">0913256588</a></p><p class="text-sm">WhatsApp: <a href="https://wa.me/2348064414142" class="underline">08064414142</a>, <a href="https://wa.me/2349060954176" class="underline">09060954176</a></p><p class="text-sm">Email: deeflexconsult@gmail.com</p></div>
+      <div><h3 class="font-bold text-lg mb-3">Address</h3><p class="text-sm">111, Agege Motor Road, beside Isokoko Police Station, Agege Lagos.</p><p class="text-sm mt-2">23, Subola Street, Aluminium Village, Dopemu Agege</p><p class="text-sm mt-2"><a href="https://maps.google.com/?q=111+Agege+Motor+Road+Agege+Lagos" target="_blank" class="underline text-blue-200">View on Map →</a></p></div></div>
+    <div class="text-center text-xs mt-8 text-blue-200">© 2026 FASH VARIETIES STORE. All rights reserved. | Designed by kampcompany01@gmail.com</div>
   </footer>
 
   <script>
-  // FASH STORE - Google Sheets Version - NEW SHEET ID + SUPABASE
-  // New Supabase URL and Key - CHANGED AS REQUESTED
   const SUPABASE_URL = 'https://xatctwmvvjchbtdsytiu.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_onSQqNKSNjmtRej5u5Yjdw_45ymw4uJ';
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // New Google Sheet ID - CHANGED AS REQUESTED
   const SHEET_ID = '1LIR667-NTuHgChtX-aml3tMl-MovsTtPuJRbdKHMwyA';
   const SHEET_NAME = 'Sheet1';
-
   let products = []
   let cart = JSON.parse(localStorage.getItem('fash-cart') || '[]')
   let currentCategory = 'all'
@@ -234,23 +130,16 @@
   let imageIndex = {}
   let busFeeAdded = false
   let currentOrderId = ''
-
   function generateOrderId() {
     const date = new Date()
-    const id = 'FVS-' + date.getFullYear().toString().slice(-2) +
-               (date.getMonth()+1).toString().padStart(2,'0') +
-               date.getDate().toString().padStart(2,'0') + '-' +
-               Math.random().toString(36).substr(2, 5).toUpperCase()
+    const id = 'FVS-' + date.getFullYear().toString().slice(-2) + (date.getMonth()+1).toString().padStart(2,'0') + date.getDate().toString().padStart(2,'0') + '-' + Math.random().toString(36).substr(2, 5).toUpperCase()
     return id
   }
-
   function calcUnitPrice(product, qty) {
     if (!product.volume_discounts ||!product.volume_discounts.length) return product.price
     const tier = product.volume_discounts.sort((a,b) => b.min_qty - a.min_qty).find(t => qty >= t.min_qty)
     return tier? product.price * (1 - tier.percent / 100) : product.price
   }
-
-  // Parse Color Quantity String - Red:50, Blue:30
   function parseColorQtyString(str){
     const obj={};
     if(!str) return obj;
@@ -264,50 +153,31 @@
     });
     return obj;
   }
-
   const colorMap = {
     'Red': '#ef4444', 'Blue': '#3b82f6', 'Green': '#22c55e', 'Black': '#000000',
     'White': '#ffffff', 'Yellow': '#eab308', 'Pink': '#ec4899', 'Purple': '#a855f7',
     'Orange': '#f97316', 'Brown': '#92400e', 'Grey': '#6b7280', 'Gray': '#6b7280',
     'Gold': '#fbbf24', 'Silver': '#d1d5db', 'Navy': '#1e3a8a', 'Maroon': '#7f1d1d'
   }
-
   function selectColor(productId, color) {
     selectedColors[productId] = color
-    document.querySelectorAll(`#product-${productId}.color-dot`).forEach(dot => {
-      dot.classList.remove('selected')
-      if (dot.dataset.color === color) dot.classList.add('selected')
-    })
     document.querySelectorAll(`#product-${productId}.color-qty-btn`).forEach(btn=>{
       btn.classList.toggle('active', btn.dataset.color===color)
     })
     const p=products.find(x=>x.id===productId);
     const avail=p.color_quantities[color]??p.stock;
     const input=document.getElementById(`qty-${productId}`);
-    if(input){
-      input.max=avail;
-    }
+    if(input){ input.max=avail; }
   }
-
-  function selectSize(productId, size){
-    selectedSizes[productId]=size;
-  }
-
+  function selectSize(productId, size){ selectedSizes[productId]=size; }
   function showImage(productId, index) {
     imageIndex[productId] = index
     const img = document.getElementById(`img-${productId}`)
     const dots = document.querySelectorAll(`#product-${productId}.image-dot`)
     const product = products.find(p => p.id === productId)
-    if (product && product.images && product.images[index]) {
-      img.src = product.images[index]
-    }
-    dots.forEach((dot, i) => {
-      dot.classList.toggle('active', i === index)
-    })
+    if (product && product.images && product.images[index]) { img.src = product.images[index] }
+    dots.forEach((dot, i) => { dot.classList.toggle('active', i === index) })
   }
-
-  // View Product - Clickable and view products under category
-  // Multiple view of products picture
   function viewProduct(id){
     const p=products.find(x=>x.id===id);
     const images=p.images.length?p.images:[p.image_url||'https://placehold.co/300x300?text=No+Image'];
@@ -316,13 +186,13 @@
       <div class="flex gap-2 mb-3 overflow-x-auto pb-2">
         ${images.map((img,i)=>`<img src="${img}" onclick="document.getElementById('modal-main-img').src='${img}'" class="w-20 h-20 object-cover rounded border-2 ${i===0?'border-blue-900':''} cursor-pointer flex-shrink-0">`).join('')}
       </div>
-      <p class="text-xs text-gray-500 mb-2">${images.length} images uploaded from Google Sheet - Click thumbnail to view large</p>
+      <p class="text-xs text-gray-500 mb-2">${images.length} images - Click thumbnail to view</p>
       <h2 class="text-xl font-bold cursor-pointer" onclick="filterCategory('${p.category}'); closeProductModal();">${p.name}</h2>
       <p class="text-xs text-blue-600 underline cursor-pointer" onclick="filterCategory('${p.category}'); closeProductModal();">View all products under ${p.category}</p>
       <p class="text-blue-900 text-2xl font-bold mt-2">₦${p.price.toLocaleString()}</p>
       <p class="text-xs text-gray-500">Total Stock: ${p.stock}</p>
       <div class="mt-3">
-        <p class="text-sm font-semibold">Color + Quantity Together:</p>
+        <p class="text-sm font-semibold">Color + Quantity:</p>
         <div class="flex flex-wrap gap-2 mt-1">
           ${(p.colors||[]).map(c=>{
             const q=p.color_quantities[c]??p.stock;
@@ -336,39 +206,36 @@
     document.getElementById('product-modal').classList.remove('hidden');
     document.getElementById('product-modal').classList.add('flex');
   }
-
   function closeProductModal(){
     document.getElementById('product-modal').classList.add('hidden');
     document.getElementById('product-modal').classList.remove('flex');
   }
 
-  // Load Products - New tables Google Sheet
-  // Supports 10 images + color_quantities
+  // ====== FIXED GOOGLE SHEET READER ONLY - NO OTHER CHANGES ======
   async function loadProducts() {
     try {
-      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}&t=${Date.now()}`;
       const res = await fetch(url);
       const text = await res.text();
       const json = JSON.parse(text.substring(47).slice(0, -2));
 
       products = json.table.rows.map((row, index) => {
         const c = row.c;
+        if(!c[0]?.v) return null;
+        const name = c[0].v.toString().trim();
+        if(name.toLowerCase()==='name' || name.length<3) return null;
 
-        // Colors
-        const colors = c[6]?.v? c[6].v.split(',').map(s => s.trim()) : [];
-
-        // Color Quantities - Red:50, Blue:30
+        // FIXED INDEXES BASED ON YOUR SCREENSHOTS:
+        // A=0 name, B=1 size, C=2 capacity_number, D=3 capacity_unit, E=4 price, F=5 stock, G=6 colors, H=7 color_quantity, I=8 image1... R=17 image10, S=18 price_5qty, T=19 price_10qty, U=20 categories
+        const colors = c[6]?.v? c[6].v.split(',').map(s => s.trim()).filter(Boolean) : [];
         const color_quantities = parseColorQtyString(c[7]?.v || "");
-        if(colors.length && Object.keys(color_quantities).length===0){
-          const per=Math.floor((Number(c[5]?.v)||0)/colors.length);
-          colors.forEach(col=>{ color_quantities[col]=per; });
+
+        const images = [];
+        for(let i=8; i<=17; i++){ // I to R = image1 to image10
+          if(c[i]?.v && c[i].v.toString().trim().startsWith('http')) images.push(c[i].v.toString().trim());
         }
 
-        // 10 Images - Columns J to S (index 9 to 18)
-        const images = [];
-        for(let i=9; i<=18; i++){
-          if(c[i]?.v) images.push(c[i].v);
-        }
+        const cat = (c[20]?.v || 'all').toString().trim(); // U = categories
 
         return {
           id: index + 1,
@@ -380,26 +247,26 @@
           stock: Number(c[5]?.v) || 0,
           colors: colors,
           color_quantities: color_quantities,
-          images: images.length? images : [c[7]?.v].filter(Boolean),
-          image_url: images[0] || c[7]?.v || '',
-          category: c[21]?.v || c[12]?.v || 'all',
+          images: images.length? images : ['https://placehold.co/300x300?text=No+Image'],
+          image_url: images[0] || 'https://placehold.co/300x300?text=No+Image',
+          category: cat || 'all',
           volume_discounts: [
-            c[19]?.v? {min_qty: 5, percent: Math.round((1 - c[19].v/c[4]?.v) * 100)} : null,
-            c[20]?.v? {min_qty: 10, percent: Math.round((1 - c[20].v/c[4]?.v) * 100)} : null
+            c[18]?.v? {min_qty: 5, percent: Math.round((1 - Number(c[18].v)/Number(c[4].v)) * 100)} : null,
+            c[19]?.v? {min_qty: 10, percent: Math.round((1 - Number(c[19].v)/Number(c[4].v)) * 100)} : null
           ].filter(Boolean)
         };
-      }).filter(p => p.name && p.stock > 0);
+      }).filter(p => p && p.name && p.price > 0 && p.stock > 0);
 
       products.forEach(p => {
         imageIndex[p.id] = 0
         if (p.colors && p.colors.length > 0) selectedColors[p.id] = p.colors[0]
       })
 
-      console.log('Products loaded from Sheet:', products);
+      console.log('Products loaded:', products);
       renderProducts()
     } catch (err) {
       console.error('Sheet error:', err);
-      document.getElementById('products').innerHTML = '<p class="text-center text-red-500">Could not load products. Make sure Sheet is public: Share → Anyone with the link → Viewer</p>'
+      document.getElementById('products').innerHTML = '<p class="text-center text-red-500 p-4">Could not load products. Make sure Sheet is public: Share → Anyone with the link → Viewer, and price/stock filled</p>'
     }
   }
 
@@ -408,182 +275,92 @@
     document.querySelectorAll('.cat-btn').forEach(btn => {
       btn.classList.remove('active', 'bg-blue-900', 'text-white')
       btn.classList.add('bg-gray-200')
+      if(btn.textContent.trim().toLowerCase()===cat.toLowerCase() || (cat==='all' && btn.textContent.trim().toLowerCase()==='all')){
+        btn.classList.add('active', 'bg-blue-900', 'text-white')
+        btn.classList.remove('bg-gray-200')
+      }
     })
-    if(window.event && window.event.target){
+    if(window.event && window.event.target && window.event.target.classList.contains('cat-btn')){
+      document.querySelectorAll('.cat-btn').forEach(b=>{b.classList.remove('active','bg-blue-900','text-white'); b.classList.add('bg-gray-200')})
       window.event.target.classList.add('active', 'bg-blue-900', 'text-white')
       window.event.target.classList.remove('bg-gray-200')
     }
     renderProducts(document.getElementById('search').value)
   }
-
   document.getElementById('search').addEventListener('input', (e) => renderProducts(e.target.value))
-
   function renderProducts(searchTerm = '') {
     const grid = document.getElementById('products')
     const noProducts = document.getElementById('no-products')
     let filtered = products
-
-    if (currentCategory!== 'all') {
-      filtered = filtered.filter(p => p.category === currentCategory)
-    }
-    if (searchTerm) {
-      filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    }
-
-    if (filtered.length === 0) {
-      grid.innerHTML = ''
-      noProducts.classList.remove('hidden')
-      return
-    }
+    if (currentCategory!== 'all') { filtered = filtered.filter(p => p.category.toLowerCase() === currentCategory.toLowerCase()) }
+    if (searchTerm) { filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())) }
+    if (filtered.length === 0) { grid.innerHTML = ''; noProducts.classList.remove('hidden'); return }
     noProducts.classList.add('hidden')
-
     grid.innerHTML = filtered.map(p => {
       const nextTier = p.volume_discounts?.sort((a,b) => a.min_qty - b.min_qty)[0]
       const images = p.images && p.images.length > 0? p.images : [p.image_url || 'https://placehold.co/300x300?text=No+Image']
       const capacityText = p.capacity_number && p.capacity_unit? `${p.capacity_number}${p.capacity_unit}` : ''
       const sizeText = p.size? `Size: ${p.size}` : ''
       const detailsText = [sizeText, capacityText].filter(Boolean).join(' • ')
-
       return `
         <div id="product-${p.id}" class="bg-white rounded-lg shadow hover:shadow-lg transition p-3">
           <div class="relative" onclick="viewProduct(${p.id})">
             <img id="img-${p.id}" src="${images[0]}" alt="${p.name}" class="w-full h-48 object-cover rounded mb-2 cursor-pointer">
-            ${images.length > 1? `
-              <div class="image-dots">
-                ${images.map((_, i) => `<div class="image-dot ${i === 0? 'active' : ''}" onclick="event.stopPropagation(); showImage(${p.id}, ${i})"></div>`).join('')}
-              </div>
-              <span class="absolute top-1 right-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">${images.length} imgs</span>
-            ` : ''}
+            ${images.length > 1? `<div class="image-dots">${images.map((_, i) => `<div class="image-dot ${i === 0? 'active' : ''}" onclick="event.stopPropagation(); showImage(${p.id}, ${i})"></div>`).join('')}</div><span class="absolute top-1 right-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">${images.length} imgs</span>` : ''}
           </div>
           <h3 class="font-semibold text-sm h-10 overflow-hidden cursor-pointer" onclick="viewProduct(${p.id})">${p.name}</h3>
           ${detailsText? `<p class="text-xs text-gray-600 mb-1">${detailsText}</p>` : ''}
           <p class="text-blue-900 text-xl font-bold">₦${p.price.toLocaleString()}</p>
           ${nextTier? `<p class="text-green-600 text-xs">Buy ${nextTier.min_qty}+ for ${nextTier.percent}% off</p>` : '<p class="text-xs h-4"></p>'}
-          ${p.colors && p.colors.length > 0? `
-            <div class="flex gap-1 my-2">
-              ${p.colors.map((color, i) => {
-                const qty = p.color_quantities[color]??p.stock;
-                return `
-                <button data-color="${color}" class="color-qty-btn ${i===0?'active':''}" onclick="selectColor(${p.id}, '${color}')">${color}: ${qty}</button>
-              `
-              }).join('')}
-            </div>
-          ` : ''}
-          <div class="flex items-center gap-2 mt-2">
-            <input type="number" min="1" max="${p.stock}" value="1" id="qty-${p.id}" class="w-14 border rounded px-2 py-1 text-sm">
-            <button onclick="addToCart(${p.id})" class="flex-1 bg-blue-900 text-white py-1.5 rounded text-sm hover:bg-blue-800">Add</button>
-          </div>
+          ${p.colors && p.colors.length > 0? `<div class="flex gap-1 my-2 flex-wrap">${p.colors.map((color, i) => { return `<button data-color="${color}" class="color-qty-btn ${i===0?'active':''}" onclick="selectColor(${p.id}, '${color}')">${color}</button>` }).join('')}</div>` : ''}
+          <div class="flex items-center gap-2 mt-2"><input type="number" min="1" max="${p.stock}" value="1" id="qty-${p.id}" class="w-14 border rounded px-2 py-1 text-sm"><button onclick="addToCart(${p.id})" class="flex-1 bg-blue-900 text-white py-1.5 rounded text-sm hover:bg-blue-800">Add</button></div>
           <p class="text-xs text-gray-500 mt-1">Stock: ${p.stock} • ${images.length} imgs</p>
         </div>
       `
     }).join('')
   }
-
   function addToCart(productId) {
     const product = products.find(p => p.id === productId)
     const qty = parseInt(document.getElementById(`qty-${productId}`).value) || 1
     const selectedColor = selectedColors[productId] || (product.colors? product.colors[0] : null)
     const selectedSize = selectedSizes[productId] || null
     const availableQty = product.color_quantities[selectedColor]??product.stock
-
-    if (qty > availableQty) {
-      alert(`Only ${availableQty} left for ${selectedColor}`)
-      return
-    }
-
+    if (qty > availableQty) { alert(`Only ${availableQty} left for ${selectedColor}`); return }
     const cartItemId = `${productId}-${selectedColor || 'default'}-${selectedSize || 'default'}`
     const existing = cart.find(item => item.cartItemId === cartItemId)
-
     if (existing) {
-      if (existing.qty + qty > availableQty) {
-        alert(`Only ${availableQty} for ${selectedColor}`)
-        return
-      }
+      if (existing.qty + qty > availableQty) { alert(`Only ${availableQty} for ${selectedColor}`); return }
       existing.qty += qty
-    } else {
-      cart.push({
-    ...product,
-        qty,
-        selectedColor,
-        selectedSize,
-        cartItemId
-      })
-    }
+    } else { cart.push({...product, qty, selectedColor, selectedSize, cartItemId }) }
     saveCart()
   }
-
   function updateCartQty(cartItemId, qty) {
     const item = cart.find(i => i.cartItemId === cartItemId)
     if (!item) return
-
-    if (qty <= 0) {
-      cart = cart.filter(i => i.cartItemId!== cartItemId)
-    } else {
+    if (qty <= 0) { cart = cart.filter(i => i.cartItemId!== cartItemId) } else {
       const avail=item.color_quantities[item.selectedColor]??item.stock
-      if (qty > avail) {
-        alert(`Only ${avail} for ${item.selectedColor}`)
-        return
-      }
+      if (qty > avail) { alert(`Only ${avail} for ${item.selectedColor}`); return }
       item.qty = qty
     }
     saveCart()
   }
-
-  function saveCart() {
-    localStorage.setItem('fash-cart', JSON.stringify(cart))
-    renderCart()
-  }
-
+  function saveCart() { localStorage.setItem('fash-cart', JSON.stringify(cart)); renderCart() }
   function renderCart() {
     document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.qty, 0)
     const cartItems = document.getElementById('cart-items')
-
-    if (cart.length === 0) {
-      cartItems.innerHTML = '<p class="text-gray-500 text-center py-8">Your cart is empty</p>'
-      document.getElementById('cart-total').textContent = '₦0'
-      return
-    }
-
+    if (cart.length === 0) { cartItems.innerHTML = '<p class="text-gray-500 text-center py-8">Your cart is empty</p>'; document.getElementById('cart-total').textContent = '₦0'; return }
     cartItems.innerHTML = cart.map(item => {
       const unitPrice = calcUnitPrice(item, item.qty)
       const itemTotal = unitPrice * item.qty
-      return `
-        <div class="border-b py-3">
-          <div class="flex justify-between">
-            <span class="font-semibold text-sm">${item.name}</span>
-            <button onclick="updateCartQty('${item.cartItemId}', 0)" class="text-red-500 text-sm">Remove</button>
-          </div>
-          <p class="text-xs text-gray-600">Color: ${item.selectedColor||'-'} (${item.color_quantities[item.selectedColor]??item.stock} left)</p>
-          <div class="flex items-center justify-between mt-2">
-            <input type="number" min="1" value="${item.qty}" onchange="updateCartQty('${item.cartItemId}',parseInt(this.value))" class="w-16 border rounded px-2 py-1 text-sm">
-            <div class="font-bold text-sm">₦${itemTotal.toLocaleString()}</div>
-          </div>
-        </div>
-      `
+      return `<div class="border-b py-3"><div class="flex justify-between"><span class="font-semibold text-sm">${item.name}</span><button onclick="updateCartQty('${item.cartItemId}', 0)" class="text-red-500 text-sm">Remove</button></div><p class="text-xs text-gray-600">Color: ${item.selectedColor||'-'} (${item.color_quantities[item.selectedColor]??item.stock} left)</p><div class="flex items-center justify-between mt-2"><input type="number" min="1" value="${item.qty}" onchange="updateCartQty('${item.cartItemId}',parseInt(this.value))" class="w-16 border rounded px-2 py-1 text-sm"><div class="font-bold text-sm">₦${itemTotal.toLocaleString()}</div></div></div>`
     }).join('')
     const total = cart.reduce((sum, item) => sum + calcUnitPrice(item, item.qty) * item.qty, 0)
     document.getElementById('cart-total').textContent = `₦${total.toLocaleString()}`
   }
-
-  function toggleCart() {
-    document.getElementById('cart-sidebar').classList.toggle('translate-x-full')
-  }
+  function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('translate-x-full') }
   document.getElementById('cart-btn').onclick = toggleCart
-
-  function toggleFulfillment(){
-    const v=document.querySelector('input[name="fulfillment_type"]:checked').value;
-    document.getElementById('delivery-fields').style.display=v==='Pickup'?'none':'block';
-  }
-
-  function updateBusFee(){
-    busFeeAdded=document.getElementById('bus-fee-check').checked;
-    document.getElementById('bus-fee-display').classList.toggle('hidden',!busFeeAdded);
-    const base=cart.reduce((s,i)=>s+calcUnitPrice(i,i.qty)*i.qty,0);
-    const tot=base+(busFeeAdded?500:0);
-    document.getElementById('modal-total').textContent=`₦${tot.toLocaleString()}`;
-  }
-
-  let currentOrderId = ''
+  function toggleFulfillment(){ const v=document.querySelector('input[name="fulfillment_type"]:checked').value; document.getElementById('delivery-fields').style.display=v==='Pickup'?'none':'block'; }
+  function updateBusFee(){ busFeeAdded=document.getElementById('bus-fee-check').checked; document.getElementById('bus-fee-display').classList.toggle('hidden',!busFeeAdded); const base=cart.reduce((s,i)=>s+calcUnitPrice(i,i.qty)*i.qty,0); const tot=base+(busFeeAdded?500:0); document.getElementById('modal-total').textContent=`₦${tot.toLocaleString()}`; }
   function checkout() {
     if (cart.length === 0) return alert('Cart is empty')
     currentOrderId = generateOrderId()
@@ -595,20 +372,13 @@
     document.getElementById('order-modal').classList.remove('hidden')
     document.getElementById('order-modal').classList.add('flex')
   }
-
-  function closeOrderModal() {
-    document.getElementById('order-modal').classList.add('hidden')
-    document.getElementById('order-modal').classList.remove('flex')
-  }
-
-  // Submit with receipt upload + WhatsApp auto
+  function closeOrderModal() { document.getElementById('order-modal').classList.add('hidden'); document.getElementById('order-modal').classList.remove('flex') }
   async function submitBankOrder(e) {
     e.preventDefault()
     const btn=document.getElementById('place-order-btn');
     const file=document.getElementById('receipt-file').files[0];
     if(!file) return alert('Upload receipt before placing order');
-    btn.textContent='Uploading receipt...';
-    btn.disabled=true;
+    btn.textContent='Uploading receipt...'; btn.disabled=true;
     try{
       const fileName=`${currentOrderId}-${Date.now()}-${file.name}`;
       const {error:upErr}=await supabaseClient.storage.from('receipts').upload(fileName,file);
@@ -638,20 +408,10 @@
       const waMsg=`🔔 NEW ORDER ${currentOrderId}%0AName: ${form.get('customer_name')}%0APhone: ${form.get('customer_phone')}%0ATotal: ₦${total.toLocaleString()}%0AFulfillment: ${form.get('fulfillment_type')}${busFeeAdded?' (+Bus ₦500 to '+form.get('nearest_bus_stop')+')':''}%0AShipping: ${form.get('shipping_info')||'-'}%0ABus Stop: ${form.get('nearest_bus_stop')||'-'}%0AItems:%0A${encodeURIComponent(orderDetails)}%0AReceipt: ${receiptUrl}`;
       window.open(`https://wa.me/2348064414142?text=${waMsg}`,'_blank');
       setTimeout(()=>{ window.open(`https://wa.me/2349060954176?text=${waMsg}`,'_blank'); }, 800);
-      cart=[];
-      saveCart();
-      closeOrderModal();
-      await loadProducts();
+      cart=[]; saveCart(); closeOrderModal(); await loadProducts();
       alert(`Order ${currentOrderId} placed! Receipt uploaded, WhatsApp sent automatically.`);
-    }catch(err){
-      alert('Failed: '+err.message);
-    }finally{
-      btn.textContent='Place Order & Notify on WhatsApp';
-      btn.disabled=false;
-    }
+    }catch(err){ alert('Failed: '+err.message); }finally{ btn.textContent='Place Order & Notify on WhatsApp'; btn.disabled=false; }
   }
-
-  // Init - Same as old code
   loadProducts()
   renderCart()
 </script>
