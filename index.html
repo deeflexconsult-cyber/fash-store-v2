@@ -179,7 +179,7 @@
     });
     return obj;
   }
-  function selectColor(productId, color) {
+    function selectColor(productId, color) {
     selectedColors[productId] = color
     const container = document.getElementById(`product-${productId}`);
     if(container){
@@ -190,12 +190,22 @@
           btn.classList.remove('active');
         }
       });
+      // Show selected color text
+      let label = container.querySelector('.selected-color-label');
+      if(!label){
+        label = document.createElement('p');
+        label.className = 'selected-color-label text-xs font-bold text-blue-900 mt-1';
+        container.querySelector('.flex.gap-1.my-2')?.after(label);
+      }
+      const p=products.find(x=>x.id===productId);
+      const avail=p.color_quantities[color]??p.stock;
+      label.textContent = `Selected: ${color} (${avail} left)`;
     }
     const p=products.find(x=>x.id===productId);
     const avail=p.color_quantities[color]??p.stock;
     const input=document.getElementById(`qty-${productId}`);
     if(input){ input.max=avail; }
-  }
+    }
   function selectSize(productId, size){ selectedSizes[productId]=size; }
   function showImage(productId, index) {
     imageIndex[productId] = index
