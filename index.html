@@ -63,6 +63,7 @@
     </div>
   </header>
   <div class="max-w-7xl mx-auto p-4">
+    <div id="debug" class="bg-yellow-100 p-2 rounded mb-3 text-xs hidden"></div>
     <div id="products" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
     <div id="no-products" class="hidden text-center py-12 text-gray-500">No products found</div>
   </div>
@@ -131,7 +132,7 @@
       <div><h3 class="font-bold text-lg mb-3">Address</h3><p class="text-sm">111, Agege Motor Road, beside Isokoko Police Station, Agege Lagos.</p><p class="text-sm mt-2">23, Subola Street, Aluminium Village, Dopemu Agege</p><p class="text-sm mt-2"><a href="https://maps.google.com/?q=111+Agege+Motor+Road+Agege+Lagos" target="_blank" class="underline text-blue-200">View on Map →</a></p></div></div>
     <div class="text-center text-xs mt-8 text-blue-200">© 2026 FASH VARIETIES STORE. All rights reserved. | Designed by kampcompany01@gmail.com</div>
   </footer>
-  <script>
+<script>
   const SUPABASE_URL = 'https://xatctwmvvjchbtdsytiu.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_onSQqNKSNjmtRej5u5Yjdw_45ymw4uJ';
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -140,7 +141,7 @@
   const ULTRAMSG_INSTANCE = "instance187016";
   const ULTRAMSG_TOKEN = "igathjad5xpejd5v";
   const SELLER_NUMBERS = ["2348064414142", "2349060954176"];
-  const APP_SCRIPT_URL = https://script.google.com/macros/s/AKfycbyS70nRK00Q7_TIVoSfxEfusiKgoxOiTn0Go_ppLLNhmyXkN4wMZ00G-WxnJaKQwg64fA/ exec";
+  const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyS70nRK00Q7_TIVoSfxEfusiKgoxOiTn0Go_ppLLNhmyXkN4wMZ00G-WxnJaKQwg64fA/exec";
   let products = []
   let cart = JSON.parse(localStorage.getItem('fash-cart') || '[]')
   let currentCategory = 'all'
@@ -153,6 +154,12 @@
     const date = new Date()
     const id = 'FVS-' + date.getFullYear().toString().slice(-2) + (date.getMonth()+1).toString().padStart(2,'0') + date.getDate().toString().padStart(2,'0') + '-' + Math.random().toString(36).substr(2, 5).toUpperCase()
     return id
+  }
+  function parseNumber(val){
+    if(!val) return 0;
+    const str = val.toString().replace(/[^0-9.]/g,'');
+    const num = Number(str);
+    return isNaN(num)?0:num;
   }
   function calcUnitPrice(product, qty) {
     if (!product.volume_discounts ||!product.volume_discounts.length) return product.price
@@ -219,6 +226,7 @@
             return `<span class="border rounded-full px-3 py-1 text-xs bg-gray-50">${c}: ${q} qty</span>`;
           }).join('')}
         </div>
+      </div>
       <div class="flex gap-2 mt-5">
         <button onclick="filterCategory('${p.category}'); closeProductModal();" class="flex-1 bg-gray-100 border py-2 rounded-lg text-sm">View all in ${p.category}</button>
         <button onclick="addToCart(${p.id}); closeProductModal();" class="flex-1 bg-blue-900 text-white py-2 rounded-lg text-sm">Add to Cart</button>
@@ -245,26 +253,31 @@
         const color_quantities = parseColorQtyString(c[7]?.v || "");
         const images = [];
         for(let i=8; i<=17; i++){ if(c[i]?.v && c[i].v.toString().trim().startsWith('http')) images.push(c[i].v.toString().trim()); }
-        const cat = (c[20]?.v || 'all').toString().trim();
+        const cat = (c[20]?.v || c[21]?.v || c[12]?.v || 'all').toString().trim();
         return {
           id: index + 1,
           name: c[0]?.v || '',
           size: c[1]?.v || '',
           capacity_number: c[2]?.v || '',
           capacity_unit: c[3]?.v || '',
-          price: Number(c[4]?.v) || 0,
-          stock: Number(c[5]?.v) || 0,
+          price: parseNumber(c[4]?.v),
+          stock: parseNumber(c[5]?.v) || 10,
           colors: colors,
           color_quantities: color_quantities,
           images: images.length? images : ['https://placehold.co/300x300?text=No+Image'],
           image_url: images[0] || 'https://placehold.co/300x300?text=No+Image',
           category: cat || 'all',
           volume_discounts: [
-            c[18]?.v? {min_qty: 5, percent: Math.round((1 - Number(c[18].v)/Number(c[4].v)) * 100)} : null,
-            c[19]?.v? {min_qty: 10, percent: Math.round((1 - Number(c[19].v)/Number(c[4].v)) * 100)} : null
+            c[18]?.v? {min_qty: 5, percent: Math.round((1 - parseNumber(c[18].v)/parseNumber(c[4]?.v)) * 100)} : null,
+            c[19]?.v? {min_qty: 10, percent: Math.round((1 - parseNumber(c[19].v)/parseNumber(c[4]?.v)) * 100)} : null
           ].filter(Boolean)
         };
-      }).filter(p => p && p.name && p.price > 0 && p.stock > 0);
+      }).filter(p => p && p.name && p.price > 0);
+      const debugEl = document.getElementById('debug');
+      if(debugEl){
+        debugEl.classList.remove('hidden');
+        debugEl.innerHTML = `✅ Loaded ${products.length} products. Categories: ${[...new Set(products.map(p=>p.category))].join(', ')}`;
+      }
       products.forEach(p => {
         imageIndex[p.id] = 0
         if (p.colors && p.colors.length > 0) selectedColors[p.id] = p.colors[0]
@@ -272,7 +285,7 @@
       renderProducts()
     } catch (err) {
       console.error('Sheet error:', err);
-      document.getElementById('products').innerHTML = '<p class="text-center text-red-500 p-4">Could not load products.</p>'
+      document.getElementById('products').innerHTML = '<p class="text-center text-red-500 p-4">Could not load products: '+err.message+'</p>'
     }
   }
   function filterCategory(cat) {
@@ -299,7 +312,7 @@
     grid.innerHTML = filtered.map(p => {
       const nextTier = p.volume_discounts?.sort((a,b) => a.min_qty - b.min_qty)[0]
       const images = p.images && p.images.length > 0? p.images : [p.image_url || 'https://placehold.co/300x300?text=No+Image']
-      const capacityText = p.capacity_number && p.capacity_unit? `${p.capacity_number}${p.capacity_unit}` : ''
+      const capacityText = p.capacity_number && p.capacity_unit? `${p.capacity_number} ${p.capacity_unit}` : ''
       const sizeText = p.size? `Size: ${p.size}` : ''
       const detailsText = [sizeText, capacityText].filter(Boolean).join(' • ')
       return `
@@ -314,7 +327,7 @@
           ${nextTier? `<p class="text-green-600 text-xs">Buy ${nextTier.min_qty}+ for ${nextTier.percent}% off</p>` : '<p class="text-xs h-4"></p>'}
           ${p.colors && p.colors.length > 0? `<div class="flex gap-1 my-2 flex-wrap">${p.colors.map((color, i) => { return `<button data-color="${color}" class="color-qty-btn ${i===0?'active':''}" onclick="selectColor(${p.id}, '${color}')">${color}</button>` }).join('')}</div>` : ''}
           <div class="flex items-center gap-2 mt-2"><input type="number" min="1" max="${p.stock}" value="1" id="qty-${p.id}" class="w-14 border rounded px-2 py-1 text-sm"><button onclick="addToCart(${p.id})" class="flex-1 bg-blue-900 text-white py-1.5 rounded text-sm hover:bg-blue-800">Add</button></div>
-          <p class="text-xs text-gray-500 mt-1">Stock: ${p.stock} • ${images.length} imgs</p>
+          <p class="text-xs text-gray-500 mt-1">Stock: ${p.stock} • ${images.length} imgs • ${p.category}</p>
         </div>
       `
     }).join('')
